@@ -1,5 +1,0 @@
-Var a
-Input a
-Var ans
-Set ans (Add a 240)
-Print ans
