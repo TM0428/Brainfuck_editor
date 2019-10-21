@@ -2,6 +2,7 @@ import sys
 import os
 
 variable = []
+piv = 0
 
 args = sys.argv
 #args[1] is file name
@@ -38,7 +39,7 @@ with open(args[1]) as f:
             """
             hoge
             """
-        
+
 
 
 
