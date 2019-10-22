@@ -69,7 +69,10 @@ if __name__ == "__main__":
                 """
                 input_dec = brainfuck.variable.index(s_line[1])
                 if is_integer(s_line[2]):
-                    output += logic.add_num(brainfuck, input_dec,int(s_line[2]))
+                    output += logic.add_num(brainfuck, input_dec,-1,int(s_line[2]))
+                else:
+                    input_dec1 = brainfuck.variable.index(s_line[2])
+                    output += logic.add_num(brainfuck,input_dec,input_dec1,None)
             elif s_line[0] == "Mul":
                 """
                 This is add function

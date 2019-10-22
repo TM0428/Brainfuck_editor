@@ -77,19 +77,13 @@ def output(bf,input_dec,char=None):
     """
     input_dec is Sequence number of input destination
     """
-    output = ""
     #go to char ver.
     if char:
-        return char_output(bf,input_dec)
+        return output_char(bf,input_dec)
+    else:
+        return output_int(bf,input_dec)
 
-    length = bf.length * 2
-    input_dec = input_dec * 2
-    output += copy_to_cal(bf,input_dec)
-    output += ">+<[>[<[>>+>+<<<-]>>>[<<<+>>>-]++++++++++<[>[<->-[>+<-]]>>+<[>-<[<+>-]]>[-<<<[-]>>>]<<<]+>[<->[-]]+<[->->>>+<<<<++++++++++[<<->>-]]>[-<<-<[>>+<<-]>>>>>>[<<<<<<+>>>>>>-]<<<]<<]>[<+>-]<[>+<-]<[>+<-]>>[<<+>>-]<[>+[<[>>+>+<<<-]>>>[<<<+>>>-]++++++++++<[>[<->-[>+<-]]>>+<[>-<[<+>-]]>[-<<<[-]>>>]<<<]+>[<->[-]]+<[->->>>+<<<<++++++++++[<<->>-]]>[-<<-<[>>+<<-]>>>>>>[<<<<<<+>>>>>>-]<<<]<<]>[<+>-]<[>+<-]<[>+<-]>>[<<+>>-]<[>++++++++[<++++++>-]<.[-]]++++++++[<++++++>-]<.[-]]++++++++[<++++++>-]<.[-]]>[++++++++[>++++++<-]>.[-]<]<"
-    bf.piv = length
-    return output
-
-def char_output(bf,input_dec):
+def output_char(bf,input_dec):
     """
     input_dec is Sequence number of input destination
     """
@@ -106,8 +100,22 @@ def char_output(bf,input_dec):
     bf.piv = input_dec
     return output
 
+def output_int(bf,input_dec):
+    output = ""
+    length = bf.length * 2
+    input_dec = input_dec * 2
+    output += copy_to_cal(bf,input_dec)
+    output += ">+<[>[<[>>+>+<<<-]>>>[<<<+>>>-]++++++++++<[>[<->-[>+<-]]>>+<[>-<[<+>-]]>[-<<<[-]>>>]<<<]+>[<->[-]]+<[->->>>+<<<<++++++++++[<<->>-]]>[-<<-<[>>+<<-]>>>>>>[<<<<<<+>>>>>>-]<<<]<<]>[<+>-]<[>+<-]<[>+<-]>>[<<+>>-]<[>+[<[>>+>+<<<-]>>>[<<<+>>>-]++++++++++<[>[<->-[>+<-]]>>+<[>-<[<+>-]]>[-<<<[-]>>>]<<<]+>[<->[-]]+<[->->>>+<<<<++++++++++[<<->>-]]>[-<<-<[>>+<<-]>>>>>>[<<<<<<+>>>>>>-]<<<]<<]>[<+>-]<[>+<-]<[>+<-]>>[<<+>>-]<[>++++++++[<++++++>-]<.[-]]++++++++[<++++++>-]<.[-]]++++++++[<++++++>-]<.[-]]>[++++++++[>++++++<-]>.[-]<]<"
+    bf.piv = length
+    return output
+
+
 
 def make_add_num(number):
+    """
+    this function is add the value of number.
+    it takes another 1 memory
+    """
     output = ""
     sq1 = int(math.sqrt(number))
     sq2 = sq1 + 1
@@ -138,14 +146,19 @@ def make_add_num(number):
     return output
 
 
-def add_num(bf,input_dec,number):
+def add_num(bf,input_dec,input_dec1,number=None):
     """
     """
     length = bf.length * 2
     input_dec = input_dec * 2
+    input_dec1 = input_dec1 * 2
     output = ""
     output += copy_to_cal(bf,input_dec)
-    output += make_add_num(number)
+    if number:
+        output += make_add_num(number)
+    else:
+        output += copy_to_cal(bf,input_dec1)
+
     for i in range(length):
         output += '<'
     output += "[-]"
