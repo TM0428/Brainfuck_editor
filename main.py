@@ -9,7 +9,7 @@ class Brainfuck:
     """
     variable = ["Res"]
     piv = 0
-    length = 1
+    length = 0
 
 args = sys.argv
 #args[1] is file name
