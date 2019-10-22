@@ -1,4 +1,5 @@
 import main
+import math
 
 def int_input(bf,input_dec):
     """
@@ -49,6 +50,49 @@ def int_output(bf,input_dec):
     bf.piv = length
     return output
 
+def char_output(bf,input_dec):
+    """
+    input_dec is Sequence number of input destination
+    """
+    output = ""
+    length = bf.length * 2
+    input_dec = input_dec * 2
+    if input_dec > bf.piv:
+        for i in range(input_dec-bf.piv):
+            output += '>'
+    elif input_dec < bf.piv:
+        for i in range(bf.piv-input_dec):
+            output += '<'
+    output += '.'
+    return output
 
 
-
+def add_num(number):
+    output = ""
+    sq1 = int(math.sqrt(number))
+    sq2 = sq1 + 1
+    num1 = abs(number - (sq1*sq1))
+    num2 = abs(number - (sq2*sq2))
+    if num1 > num2:
+        sq = sq2
+        output += '>'
+        for i in range(sq):
+            output += '+'
+        output += "[<"
+        for i in range(sq):
+            output += '+'
+        output += ">-]<"
+        for i in range(num2):
+            output += '-'
+    else:
+        sq = sq1
+        output += '>'
+        for i in range(sq):
+            output += '+'
+        output += "[<"
+        for i in range(sq):
+            output += '+'
+        output += ">-]<"
+        for i in range(num1):
+            output += '+'
+    return output

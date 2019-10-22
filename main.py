@@ -15,6 +15,7 @@ args = sys.argv
 #args[1] is file name
 if __name__ == "__main__":
     brainfuck = Brainfuck()
+    #ERROR
     if len(args) != 2:
         print('Error: Invalid command', file=sys.stderr)
         sys.exit(1)
@@ -46,9 +47,6 @@ if __name__ == "__main__":
                 hoge
                 """
             elif s_line[0] == "Scan":
-                """
-                hoge
-                """
                 input_dec = brainfuck.variable.index(s_line[1])
                 output += logic.int_input(brainfuck, input_dec)
             elif s_line[0] == "Print":
