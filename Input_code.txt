@@ -1,3 +1,4 @@
 Var a
-Scan saf a
-Print Insfsat a
+Scan Int a
+Add a 10
+Print Int Res

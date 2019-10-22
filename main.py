@@ -7,7 +7,7 @@ class Brainfuck:
     piv is memory number.
     length is len(variable)
     """
-    variable = []
+    variable = ["Res"]
     piv = 0
     length = 0
 
@@ -46,6 +46,9 @@ if __name__ == "__main__":
                 """
                 hoge
                 """
+            elif s_line[0] == "Add":
+                input_dec = brainfuck.variable.index(s_line[1])
+                output += logic.add_num(brainfuck, input_dec,10)
             elif s_line[0] == "Scan":
                 if s_line[1] == "Int":
                     input_dec = brainfuck.variable.index(s_line[2])
@@ -64,5 +67,4 @@ if __name__ == "__main__":
             #print(brainfuck.piv)
 
             line += 1
-        
         print(output)
