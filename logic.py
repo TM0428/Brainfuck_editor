@@ -2,7 +2,7 @@ import main
 import math
 
 
-def copy_to_cal(bf,input_dec):
+def copy_to_cal(bf,input_dec,number=0):
     """
     this outputs the code that the number copies to cal memory 0
     """
@@ -15,14 +15,15 @@ def copy_to_cal(bf,input_dec):
         for i in range(bf.piv-input_dec):
             output += '<'
     output += "[>+"
-    for i in range(length - input_dec-1):
+    for i in range(length - input_dec-1+number):
         output += '>'
     output += '+'
-    for i in range(length - input_dec):
+    for i in range(length - input_dec+number):
         output += '<'
     output += "-]>[<+>-]"
     for i in range(length - input_dec-1):
         output += '>'
+    bf.piv = length
     return output
 
 
@@ -30,11 +31,29 @@ def input(bf,input_dec,char=None):
     """
     input_dec is Sequence number of input destination
     """
-    output = ""
     #go to char ver.
     if char:
-        return char_input(bf,input_dec)
+        return input_char(bf,input_dec)
+    else:
+        return input_int(bf,input_dec)
 
+def input_char(bf,input_dec):
+    """
+    input_dec is Sequence number of input destination
+    """
+    output = ""
+    if input_dec > bf.piv:
+        for i in range(input_dec-bf.piv):
+            output += '>'
+    elif input_dec < bf.piv:
+        for i in range(bf.piv-input_dec):
+            output += '<'
+    output += ','
+    bf.piv = input_dec
+    return output
+
+def input_int(bf,input_dec):
+    output = ""
     length = bf.length * 2
     input_dec = input_dec * 2
     if length > bf.piv:
@@ -51,21 +70,6 @@ def input(bf,input_dec,char=None):
         output += '>'
     output += '-]'
     bf.piv = length
-    return output
-
-def char_input(bf,input_dec):
-    """
-    input_dec is Sequence number of input destination
-    """
-    output = ""
-    if input_dec > bf.piv:
-        for i in range(input_dec-bf.piv):
-            output += '>'
-    elif input_dec < bf.piv:
-        for i in range(bf.piv-input_dec):
-            output += '<'
-    output += ','
-    bf.piv = input_dec
     return output
 
 
@@ -142,6 +146,32 @@ def add_num(bf,input_dec,number):
     output = ""
     output += copy_to_cal(bf,input_dec)
     output += make_add_num(number)
+    for i in range(length):
+        output += '<'
+    output += "[-]"
+    for i in range(length):
+        output += '>'
+    output += '['
+    for i in range(length):
+        output += '<'
+    output += '+'
+    for i in range(length):
+        output += '>'
+    output += "-]"
+    bf.piv = length
+    return output
+
+
+def mul_num(bf,input_dec,number):
+    """
+    """
+    length = bf.length * 2
+    input_dec = input_dec * 2
+    output = ""
+    output += copy_to_cal(bf,input_dec)
+    output += "[->"
+    output += make_add_num(number)
+    output += "<]>[<+>-]<"
     for i in range(length):
         output += '<'
     output += "[-]"

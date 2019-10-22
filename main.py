@@ -11,6 +11,15 @@ class Brainfuck:
     piv = 0
     length = 1
 
+def is_integer(n):
+    try:
+        float(n)
+    except ValueError:
+        return False
+    else:
+        return float(n).is_integer()
+
+
 args = sys.argv
 #args[1] is file name
 if __name__ == "__main__":
@@ -59,7 +68,19 @@ if __name__ == "__main__":
                 if you don't write, the value is in the variable "Res"
                 """
                 input_dec = brainfuck.variable.index(s_line[1])
-                output += logic.add_num(brainfuck, input_dec,int(s_line[2]))
+                if is_integer(s_line[2]):
+                    output += logic.add_num(brainfuck, input_dec,int(s_line[2]))
+            elif s_line[0] == "Mul":
+                """
+                This is add function
+                >Add a b c
+                >Add a 10
+                its mean "c=a+b", but 'c' doesn't have to write. 
+                if you don't write, the value is in the variable "Res"
+                """
+                input_dec = brainfuck.variable.index(s_line[1])
+                if is_integer(s_line[2]):
+                    output += logic.mul_num(brainfuck, input_dec,int(s_line[2]))
             elif s_line[0] == "Scan":
                 """
                 This is scan function
