@@ -47,11 +47,12 @@ if __name__ == "__main__":
                 hoge
                 """
             elif s_line[0] == "Scan":
-                input_dec = brainfuck.variable.index(s_line[1])
-                output += logic.int_input(brainfuck, input_dec)
+                if s_line[1] == "Int":
+                    input_dec = brainfuck.variable.index(s_line[2])
+                    output += logic.input(brainfuck, input_dec)
             elif s_line[0] == "Print":
                 input_dec = brainfuck.variable.index(s_line[1])
-                output += logic.int_output(brainfuck, input_dec)
+                output += logic.output(brainfuck, input_dec)
             #Debug
             #print(brainfuck.piv)
 

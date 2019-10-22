@@ -1,7 +1,7 @@
 import main
 import math
 
-def int_input(bf,input_dec):
+def input(bf,input_dec,char=None):
     """
     input_dec is Sequence number of input destination
     """
@@ -24,11 +24,13 @@ def int_input(bf,input_dec):
     bf.piv = length
     return output
 
-def int_output(bf,input_dec):
+def output(bf,input_dec,char=None):
     """
     input_dec is Sequence number of input destination
     """
     output = ""
+    if char:
+        return char_output(bf,input_dec)
     length = bf.length * 2
     input_dec = input_dec * 2
     if input_dec > bf.piv:
@@ -67,7 +69,7 @@ def char_output(bf,input_dec):
     return output
 
 
-def add_num(number):
+def make_add_num(number):
     output = ""
     sq1 = int(math.sqrt(number))
     sq2 = sq1 + 1
@@ -96,3 +98,6 @@ def add_num(number):
         for i in range(num1):
             output += '+'
     return output
+
+
+def add_num(bf,)
