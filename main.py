@@ -48,7 +48,7 @@ if __name__ == "__main__":
                 """
             elif s_line[0] == "Add":
                 input_dec = brainfuck.variable.index(s_line[1])
-                output += logic.add_num(brainfuck, input_dec,10)
+                output += logic.add_num(brainfuck, input_dec,s_line[2])
             elif s_line[0] == "Scan":
                 if s_line[1] == "Int":
                     input_dec = brainfuck.variable.index(s_line[2])
