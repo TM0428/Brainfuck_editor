@@ -45,13 +45,15 @@ if __name__ == "__main__":
                 """
                 hoge
                 """
-                output += logic.int_input(brainfuck, 0)
+                input_dec = brainfuck.variable.index(s_line[1])
+                output += logic.int_input(brainfuck, input_dec)
             elif s_line[0] == "Inc":
                 """
                 hoge
                 """
             elif s_line[0] == "Print":
-                output += logic.int_output(brainfuck, 0)
+                input_dec = brainfuck.variable.index(s_line[1])
+                output += logic.int_output(brainfuck, input_dec)
             #Debug
             #print(brainfuck.piv)
 
