@@ -15,6 +15,7 @@ args = sys.argv
 #args[1] is file name
 if __name__ == "__main__":
     brainfuck = Brainfuck()
+    #ERROR
     if len(args) != 2:
         print('Error: Invalid command', file=sys.stderr)
         sys.exit(1)
