@@ -1,7 +1,12 @@
 import sys
 import os
+import logic
 
 class Brainfuck:
+    """
+    piv is memory number.
+    length is len(variable)
+    """
     variable = []
     piv = 0
     length = 0
@@ -14,6 +19,7 @@ if __name__ == "__main__":
         print('Error: Invalid command', file=sys.stderr)
         sys.exit(1)
     with open(args[1]) as f:
+        output = ""
         line = 1
         while True:
 
@@ -32,18 +38,23 @@ if __name__ == "__main__":
                         print('File "' + args[1] + '", line ' + str(line) +'\nError: Variable "' + Text + '" is used.', file=sys.stderr)
                         sys.exit(1)
                     brainfuck.variable.append(Text)
-                print(brainfuck.variable)
+                #Debug
+                #print(brainfuck.variable)
+                brainfuck.length = len(brainfuck.variable)
             elif s_line[0] == "Set":
                 """
                 hoge
                 """
+                output += logic.int_input(brainfuck, 0)
             elif s_line[0] == "Inc":
                 """
                 hoge
                 """
-
-
-
-
+            elif s_line[0] == "Print":
+                output += logic.int_output(brainfuck, 0)
+            #Debug
+            #print(brainfuck.piv)
 
             line += 1
+        
+        print(output)
