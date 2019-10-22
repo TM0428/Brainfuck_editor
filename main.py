@@ -33,6 +33,10 @@ if __name__ == "__main__":
             #Debug
             #print(s_line)
             if s_line[0] == "Var":
+                """
+                This is declaring variables
+                >Var a b c
+                """
                 for Text in s_line[1:]:
                     #used variable
                     if Text in brainfuck.variable:
@@ -47,9 +51,22 @@ if __name__ == "__main__":
                 hoge
                 """
             elif s_line[0] == "Add":
+                """
+                This is add function
+                >Add a b c
+                >Add a 10
+                its mean "c=a+b", but 'c' doesn't have to write. 
+                if you don't write, the value is in the variable "Res"
+                """
                 input_dec = brainfuck.variable.index(s_line[1])
                 output += logic.add_num(brainfuck, input_dec,int(s_line[2]))
             elif s_line[0] == "Scan":
+                """
+                This is scan function
+                >Scan Int a
+                >Scan Char a
+                this function has two mode(int or char).
+                """
                 if s_line[1] == "Int":
                     input_dec = brainfuck.variable.index(s_line[2])
                     output += logic.input(brainfuck, input_dec)
@@ -57,6 +74,12 @@ if __name__ == "__main__":
                     input_dec = brainfuck.variable.index(s_line[2])
                     output += logic.input(brainfuck, input_dec,1)
             elif s_line[0] == "Print":
+                """
+                This is print function
+                >Print Int a
+                >Print Char a
+                this function has two mode(int or char).
+                """
                 if s_line[1] == "Int":
                     input_dec = brainfuck.variable.index(s_line[2])
                     output += logic.output(brainfuck, input_dec)
