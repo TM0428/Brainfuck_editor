@@ -6,6 +6,8 @@ def input(bf,input_dec,char=None):
     input_dec is Sequence number of input destination
     """
     output = ""
+    if char:
+        return char_input(bf,input_dec)
     length = bf.length * 2
     input_dec = input_dec * 2
     if length > bf.piv:
@@ -23,6 +25,22 @@ def input(bf,input_dec,char=None):
     output += '-]'
     bf.piv = length
     return output
+
+def char_input(bf,input_dec):
+    """
+    input_dec is Sequence number of input destination
+    """
+    output = ""
+    if input_dec > bf.piv:
+        for i in range(input_dec-bf.piv):
+            output += '>'
+    elif input_dec < bf.piv:
+        for i in range(bf.piv-input_dec):
+            output += '<'
+    output += ','
+    bf.piv = input_dec
+    return output
+
 
 def output(bf,input_dec,char=None):
     """
@@ -66,6 +84,7 @@ def char_output(bf,input_dec):
         for i in range(bf.piv-input_dec):
             output += '<'
     output += '.'
+    bf.piv = input_dec
     return output
 
 
@@ -100,4 +119,6 @@ def make_add_num(number):
     return output
 
 
-def add_num(bf,)
+def add_num(bf,input_dec):
+    """
+    """

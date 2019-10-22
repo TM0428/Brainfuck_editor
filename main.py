@@ -50,9 +50,16 @@ if __name__ == "__main__":
                 if s_line[1] == "Int":
                     input_dec = brainfuck.variable.index(s_line[2])
                     output += logic.input(brainfuck, input_dec)
+                else:
+                    input_dec = brainfuck.variable.index(s_line[2])
+                    output += logic.input(brainfuck, input_dec,1)
             elif s_line[0] == "Print":
-                input_dec = brainfuck.variable.index(s_line[1])
-                output += logic.output(brainfuck, input_dec)
+                if s_line[1] == "Int":
+                    input_dec = brainfuck.variable.index(s_line[2])
+                    output += logic.output(brainfuck, input_dec)
+                else:
+                    input_dec = brainfuck.variable.index(s_line[2])
+                    output += logic.output(brainfuck, input_dec,1)
             #Debug
             #print(brainfuck.piv)
 
