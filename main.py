@@ -107,9 +107,14 @@ if __name__ == "__main__":
                 if s_line[1] == "Int":
                     input_dec = brainfuck.variable.index(s_line[2])
                     output += logic.output(brainfuck, input_dec)
+                elif s_line[1] == "String":
+                    string = s_line[2]
+                    output += logic.output(brainfuck, -1, string)
                 else:
                     input_dec = brainfuck.variable.index(s_line[2])
                     output += logic.output(brainfuck, input_dec,1)
+            elif s_line[0] == "If":
+                #hoge
             #Debug
             #print(brainfuck.piv)
 

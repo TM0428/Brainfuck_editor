@@ -83,11 +83,17 @@ def output(bf,input_dec,char=None):
     else:
         return output_int(bf,input_dec)
 
-def output_char(bf,input_dec):
+def output_char(bf,input_dec,string=None):
     """
     input_dec is Sequence number of input destination
     """
     output = ""
+    if string:
+        """
+        output string
+        command:\n
+        """
+        
     length = bf.length * 2
     input_dec = input_dec * 2
     if input_dec > bf.piv:
