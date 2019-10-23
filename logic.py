@@ -1,6 +1,25 @@
 import main
 import math
 
+class cal:
+    def __init__(self, bf: main.Brainfuck):
+        self.set = set()
+        self.set.add([i for i in range(bf.length, bf.length+100)])
+    def borrow(self, num):
+        res = []
+        for i in range(num):
+            if len(self.set) <= 0:#要素が無くなったら追加
+                self.set.add(
+                    [j for j in range(max(self.set), max(self.set)+100)])
+            temp = min(self.set)#最小を取り出す
+            res.append(temp)
+            self.set.remove(temp)
+        return res
+    def back(self, ml):
+        for v in li:
+            self.set.add(v)
+
+
 
 def copy_to_cal(bf,input_dec,number=0):
     """
