@@ -144,6 +144,7 @@ def output_char(bf,input_dec,string=None):
                 ascii = ord(char_list[i])
             output += make_add_num(ascii)
             output += ".[-]"
+        bf.piv = length
         return output
         
 
@@ -266,6 +267,57 @@ def mul_num(bf,input_dec,input_dec1,number=None):
     bf.piv = length
     return output
 
+def if_output(bf,com,input_dec,input_dec1,number=None):
+    length = bf.length * 2
+    output = ""
+    if bf.piv < length:
+        for i in range(length-bf.piv):
+            output += '>'
+    elif length < bf.piv:
+        for i in range(bf.piv-length):
+            output += '<'
+    bf.piv = length
+    output += comparison(bf,com,input_dec,input_dec1,number)
+    output += ">+<[>-<-"
+    return output
+
+def elif_output(bf,com,input_dec,input_dec1,number=None):
+    """
+    """
+    length = bf.length * 2
+    output = ""
+    if bf.piv < length:
+        for i in range(length-bf.piv):
+            output += '>'
+    elif length < bf.piv:
+        for i in range(bf.piv-length):
+            output += '<'
+    output += "]>[-<"
+    bf.piv = length
+    output += comparison(bf,com,input_dec,input_dec1,number)
+    output += "[>-<-"
+    return output
+
+def endif_output(bf):
+    """
+    """
+    length = bf.length * 2
+    output = ""
+    if bf.piv < length:
+        for i in range(length-bf.piv):
+            output += '>'
+    elif length < bf.piv:
+        for i in range(bf.piv-length):
+            output += '<'
+    if bf.in_elseIf:
+        output += ">]"
+        bf.piv = length + 1
+    else:
+        bf.piv = length
+        output += "]>[-]<"
+    return output
+
+    
 
 def comparison(bf,com,input_dec,input_dec1,number=None):
     """
