@@ -233,6 +233,19 @@ def add_num(bf,input_dec,input_dec1,number=None):
     bf.piv = length
     return output
 
+def sub_num(bf,input_dec,input_dec1,number=None):
+    """
+    This function use max 3 calc memory
+    """
+    length = bf.length * 2
+    input_dec = input_dec * 2
+    input_dec1 = input_dec1 * 2
+    output = ""
+    output += copy_to_cal(bf,input_dec)
+
+
+
+
 
 def mul_num(bf,input_dec,input_dec1,number=None):
     """
@@ -267,21 +280,59 @@ def mul_num(bf,input_dec,input_dec1,number=None):
     bf.piv = length
     return output
 
+#################### 
+#        if        #
+####################
+
 def if_output(bf,com,input_dec,input_dec1,number=None):
+
     length = bf.length * 2
+    input_dec = input_dec * 2
+    input_dec1 = input_dec1 * 2
     output = ""
+
+    output += copy_to_cal(bf,input_dec)
+    if number:
+        output += '>'
+        output += make_add_num(number)
+        output += '<'
+    else:
+        output += copy_to_cal(bf,input_dec1,1)
+    
+    bf.piv = length
+    output += comparison(bf,com)
+    output += ">+<[>-<-"
+    return output
+
+def elif_output(bf,com,input_dec,input_dec1,number=None):
+    """
+    """
+
+    length = bf.length * 2
+    input_dec = input_dec * 2
+    input_dec1 = input_dec1 * 2
+    output = ""
+
     if bf.piv < length:
         for i in range(length-bf.piv):
             output += '>'
     elif length < bf.piv:
         for i in range(bf.piv-length):
             output += '<'
+    output += "]>[-<"
     bf.piv = length
-    output += comparison(bf,com,input_dec,input_dec1,number)
-    output += ">+<[>-<-"
+    output += copy_to_cal(bf,input_dec)
+    if number:
+        output += '>'
+        output += make_add_num(number)
+        output += '<'
+    else:
+        output += copy_to_cal(bf,input_dec1,1)
+    output += comparison(bf,com)
+    output += "[>-<-"
     return output
 
-def elif_output(bf,com,input_dec,input_dec1,number=None):
+def else_output(bf):
     """
     """
     length = bf.length * 2
@@ -293,9 +344,7 @@ def elif_output(bf,com,input_dec,input_dec1,number=None):
         for i in range(bf.piv-length):
             output += '<'
     output += "]>[-<"
-    bf.piv = length
-    output += comparison(bf,com,input_dec,input_dec1,number)
-    output += "[>-<-"
+    bf,piv = length
     return output
 
 def endif_output(bf):
@@ -309,7 +358,7 @@ def endif_output(bf):
     elif length < bf.piv:
         for i in range(bf.piv-length):
             output += '<'
-    if bf.in_elseIf:
+    if bf.in_else:
         output += ">]"
         bf.piv = length + 1
     else:
@@ -319,23 +368,14 @@ def endif_output(bf):
 
     
 
-def comparison(bf,com,input_dec,input_dec1,number=None):
+def comparison(bf,com):
     """
     this library is comparison
     >,<,>=,<=,==,!=
-    The memory "bf.length * 2" is 1 or 0
+    comparison bf.piv and (bf.piv+1)
     this function use max 3 calc memory
     """
-    length = bf.length * 2
-    input_dec = input_dec * 2
-    input_dec1 = input_dec1 * 2
     output = ""
-    output += copy_to_cal(bf,input_dec)
-    if number:
-        output += '>'
-        output += make_add_num(number)
-    else:
-        output += copy_to_cal(bf,input_dec1,1)
     if com == '<':
         output += "[>[<->-[>+<-]]>>+<[>-<[<+>-]]>[-<<<[-]>>>]<<<]>[<+>[-]]<"
     elif com == '>':
@@ -349,5 +389,4 @@ def comparison(bf,com,input_dec,input_dec1,number=None):
     elif com == "!=":
         output += "[>-<-]>[<+>[-]]<"
 
-    bf.piv = length
     return output
