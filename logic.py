@@ -56,9 +56,6 @@ def input(bf,input_dec,char=None):
         return input_int(bf,input_dec)
 
 def input_char(bf,input_dec):
-    """
-    input_dec is Sequence number of input destination
-    """
     output = ""
     if input_dec > bf.piv:
         for i in range(input_dec-bf.piv):
@@ -94,6 +91,7 @@ def input_int(bf,input_dec):
 def output(bf,input_dec,char=None):
     """
     input_dec is Sequence number of input destination
+    This function use about 8 calc memory(?)
     """
     #go to char ver.
     if char:
@@ -138,7 +136,7 @@ def output_int(bf,input_dec):
 def make_add_num(number):
     """
     this function is add the value of number.
-    it takes another 1 memory
+    it takes another 1 next memory
     """
     output = ""
     sq1 = int(math.sqrt(number))
@@ -172,6 +170,7 @@ def make_add_num(number):
 
 def add_num(bf,input_dec,input_dec1,number=None):
     """
+    This function use max 2 calc memory
     """
     length = bf.length * 2
     input_dec = input_dec * 2
@@ -199,27 +198,65 @@ def add_num(bf,input_dec,input_dec1,number=None):
     return output
 
 
-def mul_num(bf,input_dec,number):
+def mul_num(bf,input_dec,input_dec1,number=None):
     """
+    This function use max 3 calc memory
     """
     length = bf.length * 2
     input_dec = input_dec * 2
+    input_dec1 = input_dec1 * 2
     output = ""
     output += copy_to_cal(bf,input_dec)
-    output += "[->"
-    output += make_add_num(number)
-    output += "<]>[<+>-]<"
-    for i in range(length):
-        output += '<'
-    output += "[-]"
-    for i in range(length):
-        output += '>'
-    output += '['
-    for i in range(length):
-        output += '<'
-    output += '+'
-    for i in range(length):
-        output += '>'
-    output += "-]"
+
+    if number:
+        output += "[->"
+        output += make_add_num(number)
+        output += "<]>[<+>-]<"
+        for i in range(length):
+            output += '<'
+        output += "[-]"
+        for i in range(length):
+            output += '>'
+        output += '['
+        for i in range(length):
+            output += '<'
+        output += '+'
+        for i in range(length):
+            output += '>'
+        output += "-]"
+    else:
+        """
+        this is not implementation
+        """
+    bf.piv = length
+    return output
+
+
+def comparison(bf,com,input_dec,input_dec1,number=None):
+    """
+    this library is comparison
+    >,<,>=,<=,==,!=
+    The memory "bf.length * 2" is 1 or 0
+    this function use max 3 calc memory
+    """
+    length = bf.length * 2
+    input_dec = input_dec * 2
+    input_dec1 = input_dec1 * 2
+    output = ""
+    output += copy_to_cal(bf,input_dec)
+
+    if com == '<':
+        output += "[>[<->-[>+<-]]>>+<[>-<[<+>-]]>[-<<<[-]>>>]<<<]>[<+>[-]]<"
+    elif com == '>':
+        output += "[>>+<<-]>[<+>-]>[<+>-]<<[>[<->-[>+<-]]>>+<[>-<[<+>-]]>[-<<<[-]>>>]<<<]>[<+>[-]]<"
+    elif com == "<=":
+        output += "[>>+<<-]>[<+>-]>[<+>-]<<[>[<->-[>+<-]]>>+<[>-<[<+>-]]>[-<<<[-]>>>]<<<]+>[<->[-]]<"
+    elif com == ">=":
+        output += "[>[<->-[>+<-]]>>+<[>-<[<+>-]]>[-<<<[-]>>>]<<<]+>[<->[-]]<"
+    elif com == "==":
+        output += "[>-<-]+>[<->[-]]<"
+    elif com == "!=":
+        output += "[>-<-]>[<+>[-]]<"
+
     bf.piv = length
     return output

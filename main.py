@@ -4,7 +4,7 @@ import logic
 
 class Brainfuck:
     """
-    piv is memory number.
+    piv is memory header.
     length is len(variable)
     """
     variable = ["Res"]
