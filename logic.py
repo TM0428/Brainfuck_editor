@@ -14,7 +14,7 @@ class cal:
             res.append(temp)
             self.set.remove(temp)
         return res
-    def back(self, ml): #borrowしたスペースを返却する。
+    def back(self, li): #borrowしたスペースを返却する。
         for v in li:
             self.set.add(v)
 
