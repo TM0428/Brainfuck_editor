@@ -10,6 +10,7 @@ class Brainfuck:
     variable = ["Res"]
     piv = 0
     length = 1
+    output = ""
 
 def is_integer(n):
     try:
@@ -19,7 +20,7 @@ def is_integer(n):
     else:
         return float(n).is_integer()
 
-def judge(s_line):
+def judge(bf, s_line, line):
     if s_line[0] == "Var":
         """
         This is declaring variables
@@ -31,8 +32,6 @@ def judge(s_line):
                 print('File "' + args[1] + '", line ' + str(line) +'\nError: Variable "' + Text + '" is used.', file=sys.stderr)
                 sys.exit(1)
             brainfuck.variable.append(Text)
-        #Debug
-        #print(brainfuck.variable)
         brainfuck.length = len(brainfuck.variable)
     elif s_line[0] == "Inc":
         """
@@ -48,13 +47,13 @@ def judge(s_line):
         """
         input_dec = brainfuck.variable.index(s_line[1])
         if is_integer(s_line[2]):
-            return logic.add_num(brainfuck, input_dec,-1,int(s_line[2]))
+            bf.output += logic.add_num(brainfuck, input_dec,-1,int(s_line[2]))
         else:
             input_dec1 = brainfuck.variable.index(s_line[2])
-            return logic.add_num(brainfuck,input_dec,input_dec1,None)
+            bf.output += logic.add_num(brainfuck,input_dec,input_dec1,None)
     elif s_line[0] == "Mul":
         """
-        This is add function
+        This is mul function
         >Add a b c
         >Add a 10
         its mean "c=a+b", but 'c' doesn't have to write. 
@@ -62,7 +61,10 @@ def judge(s_line):
         """
         input_dec = brainfuck.variable.index(s_line[1])
         if is_integer(s_line[2]):
-            return logic.mul_num(brainfuck, input_dec,int(s_line[2]))
+            bf.output += logic.mul_num(brainfuck, input_dec, -1, int(s_line[2]))
+        else:
+            input_dec1 = brainfuck.variable.index(s_line[2])
+            bf.output += logic.mul_num(brainfuck, input_dec, input_dec1, None)
     elif s_line[0] == "Scan":
         """
         This is scan function
@@ -72,10 +74,10 @@ def judge(s_line):
         """
         if s_line[1] == "Int":
             input_dec = brainfuck.variable.index(s_line[2])
-            return logic.input(brainfuck, input_dec)
+            bf.output += logic.input(brainfuck, input_dec)
         else:
             input_dec = brainfuck.variable.index(s_line[2])
-            return logic.input(brainfuck, input_dec,1)
+            bf.output += logic.input(brainfuck, input_dec,1)
     elif s_line[0] == "Print":
         """
         This is print function
@@ -85,15 +87,22 @@ def judge(s_line):
         """
         if s_line[1] == "Int":
             input_dec = brainfuck.variable.index(s_line[2])
-            return logic.output(brainfuck, input_dec)
+            bf.output += logic.output(brainfuck, input_dec)
         elif s_line[1] == "String":
             string = s_line[2]
-            return logic.output(brainfuck, -1, string)
+            bf.output += logic.output(brainfuck, -1, None, string)
         else:
             input_dec = brainfuck.variable.index(s_line[2])
-            return logic.output(brainfuck, input_dec,1)
-    elif s_line[0] == "If":
+            bf.output += logic.output(brainfuck, input_dec,1)
+    elif s_line[0] == "if":
         #hoge
+        """
+        """
+    
+    elif s_line[0] == "elif":
+        """
+        """
+    elif s_line[0] == "endif":
         """
         """
 
@@ -119,9 +128,9 @@ if __name__ == "__main__":
             #s_line[0] is command
             #Debug
             #print(s_line)
-            output += judge(s_line)
+            judge(brainfuck,s_line,line)
             #Debug
             #print(brainfuck.piv)
 
             line += 1
-        print(output)
+        print(brainfuck.output)

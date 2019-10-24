@@ -22,11 +22,13 @@ class cal:
 
 def copy_to_cal(bf,input_dec,number=0):
     """
-    this outputs the code that the number copies to cal memory 0
+    this function output the code that input_dec copies to cal memory (number)\n
+    number: default is 0\n
+    header move to (bf.length*2)
     """
     length = bf.length * 2
     output = ""
-    if input_dec > bf.piv:
+    if bf.piv < input_dec:
         for i in range(input_dec-bf.piv):
             output += '>'
     elif input_dec < bf.piv:
@@ -57,7 +59,7 @@ def input(bf,input_dec,char=None):
 
 def input_char(bf,input_dec):
     output = ""
-    if input_dec > bf.piv:
+    if bf.piv < input_dec:
         for i in range(input_dec-bf.piv):
             output += '>'
     elif input_dec < bf.piv:
@@ -71,7 +73,7 @@ def input_int(bf,input_dec):
     output = ""
     length = bf.length * 2
     input_dec = input_dec * 2
-    if length > bf.piv:
+    if bf.piv < length:
         for i in range(length-bf.piv):
             output += '>'
     elif length < bf.piv:
@@ -88,14 +90,16 @@ def input_int(bf,input_dec):
     return output
 
 
-def output(bf,input_dec,char=None):
+def output(bf,input_dec,char=None,string=None):
     """
     input_dec is Sequence number of input destination
     This function use about 8 calc memory(?)
     """
     #go to char ver.
     if char:
-        return output_char(bf,input_dec)
+        return output_char(bf,input_dec,None)
+    elif string:
+        return output_char(bf,-1,string)
     else:
         return output_int(bf,input_dec)
 
@@ -103,16 +107,47 @@ def output_char(bf,input_dec,string=None):
     """
     input_dec is Sequence number of input destination
     """
+    length = bf.length * 2
+    input_dec = input_dec * 2
     output = ""
     if string:
         """
         output string
         command:\n
         """
+        if bf.piv < length:
+            for i in range(length-bf.piv):
+                output += '>'
+        elif length < bf.piv:
+            for i in range(bf.piv-length):
+                output += '<'
+        char_list = list(string)
+        command = False
+        for i in range(len(string)):
+            if command:
+                if char_list[i] == 'n':
+                    """
+                    this is output '\n'
+                    """
+                    command = False
+                    ascii = 10
+                elif char_list[i] == '\\':
+                    command = False
+                    ascii = ord(char_list[i])
+                else:
+                    command = False
+                    ascii = ord(char_list[i])
+            elif char_list[i] == '\\':
+                command = True
+                continue
+            else:
+                ascii = ord(char_list[i])
+            output += make_add_num(ascii)
+            output += ".[-]"
+        return output
         
-    length = bf.length * 2
-    input_dec = input_dec * 2
-    if input_dec > bf.piv:
+
+    if bf.piv < input_dec:
         for i in range(input_dec-bf.piv):
             output += '>'
     elif input_dec < bf.piv:
@@ -244,7 +279,11 @@ def comparison(bf,com,input_dec,input_dec1,number=None):
     input_dec1 = input_dec1 * 2
     output = ""
     output += copy_to_cal(bf,input_dec)
-
+    if number:
+        output += '>'
+        output += make_add_num(number)
+    else:
+        output += copy_to_cal(bf,input_dec1,1)
     if com == '<':
         output += "[>[<->-[>+<-]]>>+<[>-<[<+>-]]>[-<<<[-]>>>]<<<]>[<+>[-]]<"
     elif com == '>':
