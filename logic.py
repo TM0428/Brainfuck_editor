@@ -349,6 +349,10 @@ def else_output(bf):
 
 def endif_output(bf):
     """
+    'elif' makes another bracket
+    bf.in_else//2:the number of 'elif'
+    bf.in_else!=0:include 'else' or 'elif'
+    
     """
     length = bf.length * 2
     output = ""
