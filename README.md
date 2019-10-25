@@ -13,14 +13,14 @@ Free a
 #四則演算
 Inc a
 Dec a
-Add a b c
+Add a b
 Sub a b
 Mul a b
 Div a b
 Mod a b
 #入出力
-Input a 4
-Output a
+Scan Int a
+Print Int a
 #比較,if
 Com > a b
 Com < a b
