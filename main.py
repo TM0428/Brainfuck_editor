@@ -1,6 +1,7 @@
 import sys
 import os
 import logic
+import regex
 
 class Brainfuck:
     """
@@ -22,23 +23,40 @@ def is_integer(n):
         return float(n).is_integer()
 
 def judge(bf, s_line, line):
-    if s_line[0] == "Var":
+    bf.output += logic.first_step(bf)
+    s_line_list = s_line.replace('\n','').split(' ')
+    if s_line_list[0] == "Var":
         """
         This is declaring variables
         >Var a b c
         """
-        for Text in s_line[1:]:
+        for Text in s_line_list[1:]:
             #used variable
             if Text in bf.variable:
                 print('File "' + args[1] + '", line ' + str(line) +'\nError: Variable "' + Text + '" is used.', file=sys.stderr)
                 sys.exit(1)
             bf.variable.append(Text)
         bf.length = len(bf.variable)
-    elif s_line[0] == "Inc":
+
+    elif s_line_list[0] == "Set":
+        copy_to_dec = bf.variable.index(s_line_list[1])
+        if s_line_list[2][0] == '{':
+            re_pattern = r"(?<rec>{(?:[^{}]+|(?&rec))*})"
+            re_text = regex.search(re_pattern, s_line)
+            judge(bf,re_text.group('rec')[1:len(re_text.group('rec'))-1],line)
+            bf.output += logic.set_data(bf,copy_to_dec,-1,None,1)
+        elif is_integer(s_line_list[2]):
+            bf.output += logic.set_data(bf,copy_to_dec,-1,1)
+        else:
+            input_dec = bf.variable.index(s_line_list[2])
+            bf.output += logic.set_data(bf,copy_to_dec,input_dec)
+
+
+    elif s_line_list[0] == "Inc":
         """
         hoge
         """
-    elif s_line[0] == "Add":
+    elif s_line_list[0] == "Add":
         """
         This is add function
         >Add a b c
@@ -46,13 +64,23 @@ def judge(bf, s_line, line):
         its mean "c=a+b", but 'c' doesn't have to write. 
         if you don't write, the value is in the variable "Res"
         """
-        input_dec = bf.variable.index(s_line[1])
-        if is_integer(s_line[2]):
-            bf.output += logic.add_num(bf, input_dec,-1,int(s_line[2]))
+        input_dec = bf.variable.index(s_line_list[1])
+        if is_integer(s_line_list[2]):
+            bf.output += logic.add_num(bf, input_dec,-1,int(s_line_list[2]))
         else:
-            input_dec1 = bf.variable.index(s_line[2])
+            input_dec1 = bf.variable.index(s_line_list[2])
             bf.output += logic.add_num(bf,input_dec,input_dec1,None)
-    elif s_line[0] == "Mul":
+
+    elif s_line_list[0] == "Sub":
+        input_dec = bf.variable.index(s_line_list[1])
+        if is_integer(s_line_list[2]):
+            bf.output += logic.sub_num(bf, input_dec, -1, int(s_line_list[2]))
+        else:
+            input_dec1 = bf.variable.index(s_line_list[2])
+            bf.output += logic.sub_num(bf, input_dec, input_dec1, None)
+
+
+    elif s_line_list[0] == "Mul":
         """
         This is mul function
         >Add a b c
@@ -60,71 +88,93 @@ def judge(bf, s_line, line):
         its mean "c=a+b", but 'c' doesn't have to write. 
         if you don't write, the value is in the variable "Res"
         """
-        input_dec = bf.variable.index(s_line[1])
-        if is_integer(s_line[2]):
-            bf.output += logic.mul_num(bf, input_dec, -1, int(s_line[2]))
+        input_dec = bf.variable.index(s_line_list[1])
+        if is_integer(s_line_list[2]):
+            bf.output += logic.mul_num(bf, input_dec, -1, int(s_line_list[2]))
         else:
-            input_dec1 = bf.variable.index(s_line[2])
+            input_dec1 = bf.variable.index(s_line_list[2])
             bf.output += logic.mul_num(bf, input_dec, input_dec1, None)
-    elif s_line[0] == "Scan":
+
+    elif s_line_list[0] == "Scan":
         """
         This is scan function
         >Scan Int a
         >Scan Char a
         this function has two mode(int or char).
         """
-        if s_line[1] == "Int":
-            input_dec = bf.variable.index(s_line[2])
+        if s_line_list[1] == "Int":
+            input_dec = bf.variable.index(s_line_list[2])
             bf.output += logic.input(bf, input_dec)
         else:
-            input_dec = bf.variable.index(s_line[2])
+            input_dec = bf.variable.index(s_line_list[2])
             bf.output += logic.input(bf, input_dec,1)
-    elif s_line[0] == "Print":
+
+    elif s_line_list[0] == "Print":
         """
         This is print function
         >Print Int a
         >Print Char a
         this function has two mode(int or char).
         """
-        if s_line[1] == "Int":
-            input_dec = bf.variable.index(s_line[2])
+        if s_line_list[1] == "Int":
+            input_dec = bf.variable.index(s_line_list[2])
             bf.output += logic.output(bf, input_dec)
-        elif s_line[1] == "String":
-            string = s_line[2]
+        elif s_line_list[1] == "String":
+            string = s_line_list[2]
             bf.output += logic.output(bf, -1, None, string)
         else:
-            input_dec = bf.variable.index(s_line[2])
+            input_dec = bf.variable.index(s_line_list[2])
             bf.output += logic.output(bf, input_dec,1)
-    elif s_line[0] == "if":
+
+    elif s_line_list[0] == "if":
         """
+        if is special format
+        if a >= b
+        if a != 2
+        you can write only "x op y"
+        op allows >,<,>=,<=,==,!=
+        making:
+        and,or
         """
-        input_dec = bf.variable.index(s_line[1])
-        if is_integer(s_line[3]):
-            bf.output += logic.if_output(bf, s_line[2], input_dec, -1, int(s_line[3]))
+        input_dec = bf.variable.index(s_line_list[1])
+        if is_integer(s_line_list[3]):
+            bf.output += logic.if_output(bf, s_line_list[2], input_dec, -1, int(s_line_list[3]))
         else:
-            input_dec1 = bf.variable.index(s_line[3])
-            bf.output += logic.if_output(bf, s_line[2], input_dec, input_dec1)
-    elif s_line[0] == "elif":
+            input_dec1 = bf.variable.index(s_line_list[3])
+            bf.output += logic.if_output(bf, s_line_list[2], input_dec, input_dec1)
+
+    elif s_line_list[0] == "elif":
         """
+        if is special format
+        if a >= b
+        if a != 2
+        you can write only "x op y"
+        op allows >,<,>=,<=,==,!=
+        making:
+        and,or
         """
         bf.in_else += 2
-        input_dec = bf.variable.index(s_line[1])
-        if is_integer(s_line[3]):
-            bf.output += logic.elif_output(bf, s_line[2], input_dec, -1, int(s_line[3]))
+        input_dec = bf.variable.index(s_line_list[1])
+        if is_integer(s_line_list[3]):
+            bf.output += logic.elif_output(bf, s_line_list[2], input_dec, -1, int(s_line_list[3]))
         else:
-            input_dec1 = bf.variable.index(s_line[3])
-            bf.output += logic.elif_output(bf, s_line[2], input_dec, input_dec1)
-    elif s_line[0] == "else":
+            input_dec1 = bf.variable.index(s_line_list[3])
+            bf.output += logic.elif_output(bf, s_line_list[2], input_dec, input_dec1)
+
+    elif s_line_list[0] == "else":
         """
         """
         bf.in_else += 1
         bf.output += logic.else_output(bf)
-    elif s_line[0] == "endif":
+
+    elif s_line_list[0] == "endif":
         """
+        YOU SHOULD WRITE IN "IF"
         """
         bf.output += logic.endif_output(bf)
         bf.in_else = 0
-    elif s_line[0] == "//":
+
+    elif s_line_list[0] == "//":
         pass
 
 
@@ -145,7 +195,6 @@ if __name__ == "__main__":
             #EOF
             if not s_line:
                 break
-            s_line = s_line.replace('\n','').split(' ')
             #s_line[0] is command
             judge(brainfuck,s_line,line)
             #Debug
