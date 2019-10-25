@@ -24,7 +24,8 @@ def copy_to_cal(bf,input_dec,number=0):
     """
     this function output the code that input_dec copies to cal memory (number)\n
     number: default is 0\n
-    header move to (bf.length*2)
+    header move to (bf.length*2)\n
+    YOU SHOULD DOUBLED INPUT_DEC
     """
     length = bf.length * 2
     output = ""
@@ -45,6 +46,35 @@ def copy_to_cal(bf,input_dec,number=0):
         output += '>'
     bf.piv = length
     return output
+
+def move_to_mem(bf,input_dec,copy_to_dec):
+    output = ""
+    if bf.piv < input_dec:
+        for i in range(input_dec-bf.piv):
+            output += '>'
+    elif input_dec < bf.piv:
+        for i in range(bf.piv-input_dec):
+            output += '<'
+    output += '['
+    if input_dec < copy_to_dec:
+        for i in range(copy_to_dec - input_dec):
+            output += '>'
+        output += '+'
+        for i in range(copy_to_dec - input_dec):
+            output += '<'
+        output += "-]"
+
+    elif copy_to_dec < input_dec:
+        for i in range(input_dec - copy_to_dec):
+            output += '<'
+        output += '+'
+        for i in range(input_dec - copy_to_dec):
+            output += '>'
+        output += "-]"
+    bf.piv = input_dec
+
+
+
 
 
 def input(bf,input_dec,char=None):
@@ -352,7 +382,7 @@ def endif_output(bf):
     'elif' makes another bracket
     bf.in_else//2:the number of 'elif'
     bf.in_else!=0:include 'else' or 'elif'
-    
+
     """
     length = bf.length * 2
     output = ""
