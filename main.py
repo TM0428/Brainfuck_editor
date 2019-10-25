@@ -124,6 +124,8 @@ def judge(bf, s_line, line):
         """
         bf.output += logic.endif_output(bf)
         bf.in_else = 0
+    elif s_line[0] == "//":
+        pass
 
 
 args = sys.argv
