@@ -20,6 +20,30 @@ class cal:
 
 
 
+"""
+function:
+in return, bf.piv must go to bf.length*2 and result is in the bf.piv memory
+"""
+
+def first_step(bf):
+    length = bf.length * 2
+    output = ""
+    if bf.piv < length:
+        for i in range(length-bf.piv):
+            output += '>'
+    elif length < bf.piv:
+        for i in range(bf.piv-length):
+            output += '<'
+    output += '['
+    output += move_to_mem(bf,length,0)
+    output += ']'
+    return output
+
+##################### 
+#        mem        #
+#####################
+
+
 def copy_to_cal(bf,input_dec,number=0):
     """
     this function output the code that input_dec copies to cal memory (number)\n
@@ -48,7 +72,20 @@ def copy_to_cal(bf,input_dec,number=0):
     return output
 
 def move_to_mem(bf,input_dec,copy_to_dec):
+    """
+    reset the copy_to_dec and move input_dec to copy_to_dec
+    YOU SHOULD DOUBLED NUMBER
+    """
     output = ""
+    if bf.piv < copy_to_dec:
+        for i in range(copy_to_dec-bf.piv):
+            output += '>'
+    elif copy_to_dec < bf.piv:
+        for i in range(bf.piv-copy_to_dec):
+            output += '<'
+    output += "[-]"
+    bf.piv = copy_to_dec
+
     if bf.piv < input_dec:
         for i in range(input_dec-bf.piv):
             output += '>'
@@ -72,9 +109,76 @@ def move_to_mem(bf,input_dec,copy_to_dec):
             output += '>'
         output += "-]"
     bf.piv = input_dec
+    return output
+
+
+def set_data(bf,copy_to_dec,input_dec,number=None,after_cal=None):
+    copy_to_dec = copy_to_dec * 2
+    input_dec = input_dec * 2
+    length = bf.length * 2
+    output = ""
+    if bf.piv < copy_to_dec:
+        for i in range(copy_to_dec-bf.piv):
+            output += '>'
+    elif copy_to_dec < bf.piv:
+        for i in range(bf.piv-copy_to_dec):
+            output += '<'
+    output += "[-]"
+    bf.piv = copy_to_dec
+    if after_cal:
+        if bf.piv < length:
+            for i in range(length-bf.piv):
+                output += '>'
+        elif length < bf.piv:
+            for i in range(bf.piv-length):
+                output += '<'
+        output += '['
+        bf.piv = length
+        for i in range(bf.piv-copy_to_dec):
+            output += '<'
+        output += '+'
+        for i in range(bf.piv-copy_to_dec):
+            output += '>'
+        output += "-]"
+        bf.piv = length
+        return output
+    elif number:
+        output += make_add_num(number)
+        for i in range(length-bf.piv):
+            output += '>'
+        bf.piv = length
+        return output
+    else:
+        if bf.piv < input_dec:
+            for i in range(input_dec-bf.piv):
+                output += '>'
+        elif input_dec < bf.piv:
+            for i in range(bf.piv-input_dec):
+                output += '<'
+        bf.piv = input_dec
+        output += "[>+<"
+        if bf.piv < copy_to_dec:
+            for i in range(copy_to_dec-bf.piv):
+                output += '>'
+            output += '+'
+            for i in range(copy_to_dec-bf.piv):
+                output += '<'
+        elif copy_to_dec < bf.piv:
+            for i in range(bf.piv-copy_to_dec):
+                output += '<'
+            output += '+'
+            for i in range(bf.piv-copy_to_dec):
+                output += '>'
+        output += "-]>[<+>-]<"
+        bf.piv = length
+        return output
 
 
 
+
+#################### 
+#       ScPt       #
+####################
 
 
 def input(bf,input_dec,char=None):
@@ -88,6 +192,7 @@ def input(bf,input_dec,char=None):
         return input_int(bf,input_dec)
 
 def input_char(bf,input_dec):
+    length = bf.length * 2
     output = ""
     if bf.piv < input_dec:
         for i in range(input_dec-bf.piv):
@@ -96,7 +201,13 @@ def input_char(bf,input_dec):
         for i in range(bf.piv-input_dec):
             output += '<'
     output += ','
-    bf.piv = input_dec
+    if input_dec < length:
+        for i in range(length-input_dec):
+            output += '>'
+    elif length < input_dec:
+        for i in range(input_dec-length):
+            output += '<'
+    bf.piv = length
     return output
 
 def input_int(bf,input_dec):
@@ -185,7 +296,13 @@ def output_char(bf,input_dec,string=None):
         for i in range(bf.piv-input_dec):
             output += '<'
     output += '.'
-    bf.piv = input_dec
+    if input_dec < length:
+        for i in range(length-input_dec):
+            output += '>'
+    elif length < input_dec:
+        for i in range(input_dec-length):
+            output += '<'
+    bf.piv = length
     return output
 
 def output_int(bf,input_dec):
@@ -205,6 +322,10 @@ def make_add_num(number):
     it takes another 1 next memory
     """
     output = ""
+    if number < 16:
+        for i in range(number):
+            output += '+'
+        return output
     sq1 = int(math.sqrt(number))
     sq2 = sq1 + 1
     num1 = abs(number - (sq1*sq1))
@@ -234,6 +355,10 @@ def make_add_num(number):
     return output
 
 
+#################### 
+#       +-*/       #
+####################
+
 def add_num(bf,input_dec,input_dec1,number=None):
     """
     This function use max 2 calc memory
@@ -247,7 +372,9 @@ def add_num(bf,input_dec,input_dec1,number=None):
         output += make_add_num(number)
     else:
         output += copy_to_cal(bf,input_dec1)
-
+    bf.piv = length
+    return output
+    """
     for i in range(length):
         output += '<'
     output += "[-]"
@@ -260,9 +387,7 @@ def add_num(bf,input_dec,input_dec1,number=None):
     for i in range(length):
         output += '>'
     output += "-]"
-    bf.piv = length
-    return output
-
+    """
 def sub_num(bf,input_dec,input_dec1,number=None):
     """
     This function use max 3 calc memory
@@ -272,6 +397,16 @@ def sub_num(bf,input_dec,input_dec1,number=None):
     input_dec1 = input_dec1 * 2
     output = ""
     output += copy_to_cal(bf,input_dec)
+    if number:
+        output += '>'
+        output += make_add_num(number)
+        output += "[<->-]<"
+    else:
+        output += copy_to_cal(bf,input_dec1,1)
+        output += ">[<->-]<"
+    bf.piv = length
+    return output
+
 
 
 
@@ -279,7 +414,7 @@ def sub_num(bf,input_dec,input_dec1,number=None):
 
 def mul_num(bf,input_dec,input_dec1,number=None):
     """
-    This function use max 3 calc memory
+    This function use max 4 calc memory
     """
     length = bf.length * 2
     input_dec = input_dec * 2
@@ -291,22 +426,9 @@ def mul_num(bf,input_dec,input_dec1,number=None):
         output += "[->"
         output += make_add_num(number)
         output += "<]>[<+>-]<"
-        for i in range(length):
-            output += '<'
-        output += "[-]"
-        for i in range(length):
-            output += '>'
-        output += '['
-        for i in range(length):
-            output += '<'
-        output += '+'
-        for i in range(length):
-            output += '>'
-        output += "-]"
     else:
-        """
-        this is not implementation
-        """
+        output += copy_to_cal(bf,input_dec1,1)
+        output += "[->[>+>+<<-]>[<+>-]<<]>>>[<<<+>>>-]<<[-]<"
     bf.piv = length
     return output
 
@@ -395,11 +517,10 @@ def endif_output(bf):
     if bf.in_else:
         output += ">]"
         for i in range(bf.in_else//2):
-            output += ']'
-        bf.piv = length + 1
+            output += ']<'
     else:
-        bf.piv = length
         output += "]>[-]<"
+    bf.piv = length
     return output
 
     
