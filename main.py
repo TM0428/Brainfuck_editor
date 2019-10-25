@@ -11,7 +11,7 @@ class Brainfuck:
     piv = 0
     length = 1
     output = ""
-    in_else = False
+    in_else = 0
 
 def is_integer(n):
     try:
@@ -107,7 +107,7 @@ def judge(bf, s_line, line):
     elif s_line[0] == "elif":
         """
         """
-        bf.in_else = True
+        bf.in_else += 2
         input_dec = bf.variable.index(s_line[1])
         if is_integer(s_line[3]):
             bf.output += logic.elif_output(bf, s_line[2], input_dec, -1, int(s_line[3]))
@@ -117,13 +117,13 @@ def judge(bf, s_line, line):
     elif s_line[0] == "else":
         """
         """
-        bf.in_else = True
+        bf.in_else += 1
         bf.output += logic.else_output(bf)
     elif s_line[0] == "endif":
         """
         """
         bf.output += logic.endif_output(bf)
-        bf.in_else = False
+        bf.in_else = 0
 
 
 args = sys.argv

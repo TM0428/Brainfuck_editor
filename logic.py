@@ -329,7 +329,7 @@ def elif_output(bf,com,input_dec,input_dec1,number=None):
     else:
         output += copy_to_cal(bf,input_dec1,1)
     output += comparison(bf,com)
-    output += "[>-<-"
+    output += ">+<[>-<-"
     return output
 
 def else_output(bf):
@@ -344,7 +344,7 @@ def else_output(bf):
         for i in range(bf.piv-length):
             output += '<'
     output += "]>[-<"
-    bf,piv = length
+    bf.piv = length
     return output
 
 def endif_output(bf):
@@ -360,6 +360,8 @@ def endif_output(bf):
             output += '<'
     if bf.in_else:
         output += ">]"
+        for i in range(bf.in_else//2):
+            output += ']'
         bf.piv = length + 1
     else:
         bf.piv = length
