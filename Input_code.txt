@@ -1,4 +1,11 @@
-Var a
+Var a b
 Scan Int a
-Add a 10
-Print Int Res
+Scan Int b
+if a > 9
+Print String -1\n
+elif b > 9
+Print String -1\n
+else
+Set a {Mul a b}
+Print Int a
+endif

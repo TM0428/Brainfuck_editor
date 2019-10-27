@@ -13,6 +13,7 @@ class Brainfuck:
     length = 1
     output = ""
     in_else = 0
+    data_memory = 2
 
 def is_integer(n):
     try:
@@ -83,9 +84,8 @@ def judge(bf, s_line, line):
     elif s_line_list[0] == "Mul":
         """
         This is mul function
-        >Add a b c
-        >Add a 10
-        its mean "c=a+b", but 'c' doesn't have to write. 
+        >Mul a b
+        >Mul a 10
         if you don't write, the value is in the variable "Res"
         """
         input_dec = bf.variable.index(s_line_list[1])
@@ -94,6 +94,25 @@ def judge(bf, s_line, line):
         else:
             input_dec1 = bf.variable.index(s_line_list[2])
             bf.output += logic.mul_num(bf, input_dec, input_dec1, None)
+
+    elif s_line_list[0] == "Div":
+        bf.output += logic.div_num(bf,s_line_list[1],s_line_list[2])
+        """
+        input_dec = bf.variable.index(s_line_list[1])
+        if is_integer(s_line_list[2]):
+            bf.output += logic.div_num(bf, input_dec, -1, int(s_line_list[2]))
+        else:
+            input_dec1 = bf.variable.index(s_line_list[2])
+            bf.output += logic.div_num(bf, input_dec, input_dec1, None)
+        """
+
+    elif s_line_list[0] == "Mod":
+        input_dec = bf.variable.index(s_line_list[1])
+        if is_integer(s_line_list[2]):
+            bf.output += logic.mod_num(bf, input_dec, -1, int(s_line_list[2]))
+        else:
+            input_dec1 = bf.variable.index(s_line_list[2])
+            bf.output += logic.mod_num(bf, input_dec, input_dec1, None)
 
     elif s_line_list[0] == "Scan":
         """
@@ -169,13 +188,17 @@ def judge(bf, s_line, line):
 
     elif s_line_list[0] == "endif":
         """
-        YOU SHOULD WRITE IN "IF"
+        YOU SHOULD WRITE THE END OF "IF"
         """
         bf.output += logic.endif_output(bf)
         bf.in_else = 0
 
     elif s_line_list[0] == "//":
         pass
+
+    elif s_line_list[0] == "Command":
+        #Command is Debug.
+        bf.output += s_line_list[1]
 
 
 args = sys.argv
