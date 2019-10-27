@@ -714,7 +714,7 @@ def logical_operation(bf,op,input_dec,input_dec1,number=None):
         output += "]"
 
         #res=1
-        output += "+@"
+        output += "+"
         output += move_header(bf,flag)
         output += "["
 
