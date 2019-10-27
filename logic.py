@@ -44,6 +44,7 @@ def first_step(bf):
     output += '['
     output += move_to_mem(bf,length,0)
     output += ']'
+    bf.piv = length
     return output
 
 ##################### 
@@ -416,9 +417,6 @@ def sub_num(bf,input_dec,input_dec1,number=None):
 
 
 
-
-
-
 def mul_num(bf,input_dec,input_dec1,number=None):
     """
     This function use max 4 calc memory
@@ -439,9 +437,17 @@ def mul_num(bf,input_dec,input_dec1,number=None):
     bf.piv = length
     return output
 
-def div_num(bf,input1,input2):
+def div_num(bf,input1,input2,after_cal=None):
     length = bf.length * bf.data_memory
     output = ""
+    if after_cal:
+        if bf.piv < length:
+            for i in range(length-bf.piv):
+                output += '>'
+        elif length < bf.piv:
+            for i in range(bf.piv-length):
+                output += '<'
+        output += "[>>+<<-]"
     if is_integer(input1):
         if bf.piv < length:
             for i in range(length-bf.piv):
@@ -451,22 +457,24 @@ def div_num(bf,input1,input2):
                 output += '<'
         output += make_add_num(input1)
     else:
-        input_dec = bf.variable.index(input1)
+        input_dec = bf.variable.index(input1) * 2
         output += copy_to_cal(bf,input_dec)
-    #bf.pit = length
-    if is_integer(input2):
+    #bf.piv = length
+    if after_cal:
+        output += ">>[<+>-]<<"
+    elif is_integer(input2):
         output += '>'
         output += make_add_num(input2)
         output += '<'
     else:
-        input_dec = bf.variable.index(input2)
+        input_dec = bf.variable.index(input2) * 2
         output += copy_to_cal(bf,input_dec,1)
-    #bf.pit = length
+    #bf.piv = length
     output += ">>>+<<[>>+<<[>+<-]]>[<+>-]>[<+>-]<-[<<[>>>+>+<<<<-]>>>>[<<<<+>>>>-]<<<[>>>+>+<<<<-]>>>>[<<<<+>>>>-]<<[>[<->-[>+<-]]>>+<[>-<[<+>-]]>[-<<<[-]>>>]<<<]+>[<->[-]]+<[->->>>+<<<<<<[<->>>+<<-]>>[<<+>>-]]>[-<<-<[-]>>>]<<]<<[-]>>>>>>>[<<<<<<<+>>>>>>>-]<<<<<<<"
     bf.piv = length
     return output
     
-def mod_num(bf,input1,input2):
+def mod_num(bf,input1,input2,after_cal=None):
     length = bf.length * bf.data_memory
     output = ""
     if is_integer(input1):

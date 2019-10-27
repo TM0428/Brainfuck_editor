@@ -60,10 +60,8 @@ def judge(bf, s_line, line):
     elif s_line_list[0] == "Add":
         """
         This is add function
-        >Add a b c
+        >Add a b
         >Add a 10
-        its mean "c=a+b", but 'c' doesn't have to write. 
-        if you don't write, the value is in the variable "Res"
         """
         input_dec = bf.variable.index(s_line_list[1])
         if is_integer(s_line_list[2]):
@@ -96,10 +94,22 @@ def judge(bf, s_line, line):
             bf.output += logic.mul_num(bf, input_dec, input_dec1, None)
 
     elif s_line_list[0] == "Div":
-        bf.output += logic.div_num(bf,s_line_list[1],s_line_list[2])
+        if s_line_list[2][0] == '{':
+            re_pattern = r"(?<rec>{(?:[^{}]+|(?&rec))*})"
+            re_text = regex.search(re_pattern, s_line)
+            judge(bf,re_text.group('rec')[1:len(re_text.group('rec'))-1],line)
+            bf.output += logic.div_num(bf,s_line_list[1],s_line_list[2],1)
+        else:
+            bf.output += logic.div_num(bf,s_line_list[1],s_line_list[2])
 
     elif s_line_list[0] == "Mod":
-        bf.output += logic.mod_num(bf,s_line_list[1],s_line_list[2])
+        if s_line_list[2][0] == '{':
+            re_pattern = r"(?<rec>{(?:[^{}]+|(?&rec))*})"
+            re_text = regex.search(re_pattern, s_line)
+            judge(bf,re_text.group('rec')[1:len(re_text.group('rec'))-1],line)
+            bf.output += logic.mod_num(bf,s_line_list[1],s_line_list[2],1)
+        else:
+            bf.output += logic.mod_num(bf,s_line_list[1],s_line_list[2])
 
     elif s_line_list[0] == "Scan":
         """
