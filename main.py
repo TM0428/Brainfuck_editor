@@ -97,22 +97,9 @@ def judge(bf, s_line, line):
 
     elif s_line_list[0] == "Div":
         bf.output += logic.div_num(bf,s_line_list[1],s_line_list[2])
-        """
-        input_dec = bf.variable.index(s_line_list[1])
-        if is_integer(s_line_list[2]):
-            bf.output += logic.div_num(bf, input_dec, -1, int(s_line_list[2]))
-        else:
-            input_dec1 = bf.variable.index(s_line_list[2])
-            bf.output += logic.div_num(bf, input_dec, input_dec1, None)
-        """
 
     elif s_line_list[0] == "Mod":
-        input_dec = bf.variable.index(s_line_list[1])
-        if is_integer(s_line_list[2]):
-            bf.output += logic.mod_num(bf, input_dec, -1, int(s_line_list[2]))
-        else:
-            input_dec1 = bf.variable.index(s_line_list[2])
-            bf.output += logic.mod_num(bf, input_dec, input_dec1, None)
+        bf.output += logic.mod_num(bf,s_line_list[1],s_line_list[2])
 
     elif s_line_list[0] == "Scan":
         """

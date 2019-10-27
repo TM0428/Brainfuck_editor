@@ -466,7 +466,32 @@ def div_num(bf,input1,input2):
     bf.piv = length
     return output
     
-
+def mod_num(bf,input1,input2):
+    length = bf.length * bf.data_memory
+    output = ""
+    if is_integer(input1):
+        if bf.piv < length:
+            for i in range(length-bf.piv):
+                output += '>'
+        elif length < bf.piv:
+            for i in range(bf.piv-length):
+                output += '<'
+        output += make_add_num(input1)
+    else:
+        input_dec = bf.variable.index(input1)
+        output += copy_to_cal(bf,input_dec)
+    #bf.pit = length
+    if is_integer(input2):
+        output += '>'
+        output += make_add_num(input2)
+        output += '<'
+    else:
+        input_dec = bf.variable.index(input2)
+        output += copy_to_cal(bf,input_dec,1)
+    #bf.pit = length
+    output += ">>>+<<[>>+<<[>+<-]]>[<+>-]>[<+>-]<-[<<[>>>+>+<<<<-]>>>>[<<<<+>>>>-]<<<[>>>+>+<<<<-]>>>>[<<<<+>>>>-]<<[>[<->-[>+<-]]>>+<[>-<[<+>-]]>[-<<<[-]>>>]<<<]+>[<->[-]]+<[->-<<<[<->>>+<<-]>>[<<+>>-]]>[-<<-<[-]>>>]<<]<<"
+    bf.piv = length
+    return output
 
 
 
