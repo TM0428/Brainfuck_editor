@@ -445,20 +445,10 @@ def div_num(bf,input1,input2,after_cal=None):
     length = bf.length * bf.data_memory
     output = ""
     if after_cal:
-        if bf.piv < length:
-            for i in range(length-bf.piv):
-                output += '>'
-        elif length < bf.piv:
-            for i in range(bf.piv-length):
-                output += '<'
+        output += move_header(bf,length)
         output += "[>>+<<-]"
     if is_integer(input1):
-        if bf.piv < length:
-            for i in range(length-bf.piv):
-                output += '>'
-        elif length < bf.piv:
-            for i in range(bf.piv-length):
-                output += '<'
+        output += move_header(bf,length)
         output += make_add_num(int(input1))
     else:
         input_dec = bf.variable.index(input1) * 2
@@ -482,20 +472,10 @@ def mod_num(bf,input1,input2,after_cal=None):
     length = bf.length * bf.data_memory
     output = ""
     if after_cal:
-        if bf.piv < length:
-            for i in range(length-bf.piv):
-                output += '>'
-        elif length < bf.piv:
-            for i in range(bf.piv-length):
-                output += '<'
+        output += move_header(bf,length)
         output += "[>>+<<-]"
     if is_integer(input1):
-        if bf.piv < length:
-            for i in range(length-bf.piv):
-                output += '>'
-        elif length < bf.piv:
-            for i in range(bf.piv-length):
-                output += '<'
+        output += move_header(bf,length)
         output += make_add_num(int(input1))
     else:
         input_dec = bf.variable.index(input1) * 2
@@ -527,12 +507,7 @@ def if_output(bf,input1,input2,com):
     output = ""
 
     if is_integer(input1):
-        if bf.piv < length:
-            for i in range(length-bf.piv):
-                output += '>'
-        elif length < bf.piv:
-            for i in range(bf.piv-length):
-                output += '<'
+        output += move_header(bf,length)
         output += make_add_num(int(input1))
     else:
         input_dec = bf.variable.index(input1) * 2
@@ -555,12 +530,7 @@ def elif_output(bf,input1,input2,com):
     length = bf.length * bf.data_memory
     output = ""
 
-    if bf.piv < length:
-        for i in range(length-bf.piv):
-            output += '>'
-    elif length < bf.piv:
-        for i in range(bf.piv-length):
-            output += '<'
+    output += move_header(bf,length)
     output += "]>[-<"
     #bf.piv = length
     if is_integer(input1):
@@ -605,12 +575,7 @@ def endif_output(bf):
     """
     length = bf.length * 2
     output = ""
-    if bf.piv < length:
-        for i in range(length-bf.piv):
-            output += '>'
-    elif length < bf.piv:
-        for i in range(bf.piv-length):
-            output += '<'
+    output += move_header(bf,length)
     if bf.in_else:
         if bf.in_else%2 == 1:
             output += ">]<"
