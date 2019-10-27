@@ -154,12 +154,7 @@ def judge(bf, s_line, line, in_loop=False):
         making:
         and,or
         """
-        input_dec = bf.variable.index(s_line_list[1])
-        if is_integer(s_line_list[3]):
-            bf.output += logic.if_output(bf, s_line_list[2], input_dec, -1, int(s_line_list[3]))
-        else:
-            input_dec1 = bf.variable.index(s_line_list[3])
-            bf.output += logic.if_output(bf, s_line_list[2], input_dec, input_dec1)
+        bf.output += logic.if_output(bf,s_line_list[1],s_line_list[3],s_line_list[2])
 
     elif s_line_list[0] == "elif":
         """
@@ -172,12 +167,7 @@ def judge(bf, s_line, line, in_loop=False):
         and,or
         """
         bf.in_else += 2
-        input_dec = bf.variable.index(s_line_list[1])
-        if is_integer(s_line_list[3]):
-            bf.output += logic.elif_output(bf, s_line_list[2], input_dec, -1, int(s_line_list[3]))
-        else:
-            input_dec1 = bf.variable.index(s_line_list[3])
-            bf.output += logic.elif_output(bf, s_line_list[2], input_dec, input_dec1)
+        bf.output += logic.elif_output(bf,s_line_list[1],s_line_list[3],s_line_list[2])
 
     elif s_line_list[0] == "else":
         """

@@ -526,33 +526,37 @@ def mod_num(bf,input1,input2,after_cal=None):
 #        if        #
 ####################
 
-def if_output(bf,com,input_dec,input_dec1,number=None):
-
-    length = bf.length * 2
-    input_dec = input_dec * 2
-    input_dec1 = input_dec1 * 2
+def if_output(bf,input1,input2,com):
+    length = bf.length * bf.data_memory
     output = ""
 
-    output += copy_to_cal(bf,input_dec)
-    if number:
+    if is_integer(input1):
+        if bf.piv < length:
+            for i in range(length-bf.piv):
+                output += '>'
+        elif length < bf.piv:
+            for i in range(bf.piv-length):
+                output += '<'
+        output += make_add_num(int(input1))
+    else:
+        input_dec = bf.variable.index(input1) * 2
+        output += copy_to_cal(bf,input_dec)
+    #bf.pit = length
+    if is_integer(input2):
         output += '>'
-        output += make_add_num(number)
+        output += make_add_num(int(input2))
         output += '<'
     else:
-        output += copy_to_cal(bf,input_dec1,1)
-    
-    bf.piv = length
+        input_dec = bf.variable.index(input2) * 2
+        output += copy_to_cal(bf,input_dec,1)
+    #bf.pit = length
     output += comparison(bf,com)
     output += ">+<[>-<-"
+    bf.piv = length
     return output
 
-def elif_output(bf,com,input_dec,input_dec1,number=None):
-    """
-    """
-
-    length = bf.length * 2
-    input_dec = input_dec * 2
-    input_dec1 = input_dec1 * 2
+def elif_output(bf,input1,input2,com):
+    length = bf.length * bf.data_memory
     output = ""
 
     if bf.piv < length:
@@ -562,16 +566,23 @@ def elif_output(bf,com,input_dec,input_dec1,number=None):
         for i in range(bf.piv-length):
             output += '<'
     output += "]>[-<"
-    bf.piv = length
-    output += copy_to_cal(bf,input_dec)
-    if number:
+    #bf.piv = length
+    if is_integer(input1):
+        output += make_add_num(int(input1))
+    else:
+        input_dec = bf.variable.index(input1) * 2
+        output += copy_to_cal(bf,input_dec)
+    #bf.pit = length
+    if is_integer(input2):
         output += '>'
-        output += make_add_num(number)
+        output += make_add_num(int(input2))
         output += '<'
     else:
-        output += copy_to_cal(bf,input_dec1,1)
+        input_dec = bf.variable.index(input2) * 2
+        output += copy_to_cal(bf,input_dec,1)
     output += comparison(bf,com)
     output += ">+<[>-<-"
+    bf.piv = length
     return output
 
 def else_output(bf):
@@ -605,9 +616,12 @@ def endif_output(bf):
         for i in range(bf.piv-length):
             output += '<'
     if bf.in_else:
-        output += ">]"
+        if bf.in_else%2 == 1:
+            output += ">]<"
+        else:
+            output += ']'
         for i in range(bf.in_else//2):
-            output += ']<'
+            output += '>]<]'
     else:
         output += "]>[-]<"
     bf.piv = length
