@@ -73,12 +73,13 @@ def judge(bf, s_line, line, in_loop=False):
             bf.output += logic.add_num(bf,s_line_list[1],s_line_list[2])
 
     elif s_line_list[0] == "Sub":
-        input_dec = bf.variable.index(s_line_list[1])
-        if is_integer(s_line_list[2]):
-            bf.output += logic.sub_num(bf, input_dec, -1, int(s_line_list[2]))
+        if s_line_list[2][0] == '{':
+            re_pattern = r"(?<rec>{(?:[^{}]+|(?&rec))*})"
+            re_text = regex.search(re_pattern, s_line)
+            judge(bf,re_text.group('rec')[1:len(re_text.group('rec'))-1],line,True)
+            bf.output += logic.sub_num(bf,s_line_list[1],s_line_list[2],1)
         else:
-            input_dec1 = bf.variable.index(s_line_list[2])
-            bf.output += logic.sub_num(bf, input_dec, input_dec1, None)
+            bf.output += logic.sub_num(bf,s_line_list[1],s_line_list[2])
 
 
     elif s_line_list[0] == "Mul":
