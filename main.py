@@ -188,6 +188,15 @@ def judge(bf, s_line, line, in_loop=False):
     elif s_line_list[0] == "Command":
         #Command is Debug.
         bf.output += s_line_list[1]
+    
+    elif s_line_list[0] == "And":
+        input_dec = bf.variable.index(s_line_list[1])
+        if is_integer(s_line_list[2]):
+            bf.output += logic.logical_operation(bf,"and",input_dec,-1,int(s_line_list[2]))
+        else:
+            input_dec1 = bf.variable.index(s_line_list[2])
+            bf.output += logic.logical_operation(bf,"and",input_dec,input_dec1,None)
+
 
 
 args = sys.argv

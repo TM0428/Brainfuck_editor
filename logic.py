@@ -651,3 +651,74 @@ def comparison(bf,com):
         output += "[>-<-]>[<+>[-]]<"
 
     return output
+
+def move_header(bf,input_to):
+    output = ""
+    if bf.piv < input_to:
+        for i in range(input_to-bf.piv):
+            output += '>'
+    elif input_to < bf.piv:
+        for i in range(bf.piv-input_to):
+            output += '<'
+    bf.piv = input_to
+    return output
+
+def logical_operation(bf,op,input_dec,input_dec1,number=None):
+    """
+    this library is logical operation
+    and or not nand nor xor
+    op input_dec and (input_dec1 or number)
+    this function use max 3 calc memory([bf.length,bf.length+2])
+    """
+    length = bf.length * 2
+    input_dec = input_dec * 2
+    input_dec1 = input_dec1 * 2
+    output = ""
+    piv = bf.piv
+    if op == "and":
+        #[flag]に2をセットして引数の値がnon 0なら[flag]から1を引く
+        flag = length+2
+        output += move_header(bf,flag)
+        output += "++"
+
+        output += copy_to_cal(bf,input_dec)
+        output += move_header(bf,length)
+        output += "["
+        output += move_header(bf,flag)
+        output += "-"
+        output += move_header(bf,length)
+        output+="[-]"
+        output += "]"
+        
+        if number!=None:
+            #set bf.length number(also use bf.length+1) 
+            output += make_add_num(number)
+            output += move_header(bf,length)
+            output += "["
+            output += move_header(bf,flag)
+            output += "-"
+            output += move_header(bf,length)
+            output+="[-]"
+            output += "]"
+        else:
+            output += copy_to_cal(bf,input_dec1)
+            output += move_header(bf,length)
+            output += "["
+            output += move_header(bf,flag)
+            output += "-"
+            output += move_header(bf,length)
+            output+="[-]"
+            output += "]"
+        
+        output += move_header(bf,length)
+        output += "+"
+        output += move_header(bf,flag)
+        output += "["
+        output += move_header(bf,length)
+        output += "[-]"
+        output += move_header(bf,flag)
+        output += "[-]"
+        output += "]"
+        #go to length
+        output += move_header(bf,length)
+    return output
