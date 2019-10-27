@@ -369,7 +369,7 @@ def make_add_num(number):
 
 def add_num(bf,input1,input2,after_cal=None):
     """
-    This function use max 2 calc memory
+    This function use max 3 calc memory
     """
     length = bf.length * 2
     output = ""
