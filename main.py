@@ -23,8 +23,9 @@ def is_integer(n):
     else:
         return float(n).is_integer()
 
-def judge(bf, s_line, line):
-    bf.output += logic.first_step(bf)
+def judge(bf, s_line, line, in_loop=False):
+    if not in_loop:
+        bf.output += logic.first_step(bf)
     s_line_list = s_line.replace('\n','').split(' ')
     if s_line_list[0] == "Var":
         """
@@ -44,7 +45,7 @@ def judge(bf, s_line, line):
         if s_line_list[2][0] == '{':
             re_pattern = r"(?<rec>{(?:[^{}]+|(?&rec))*})"
             re_text = regex.search(re_pattern, s_line)
-            judge(bf,re_text.group('rec')[1:len(re_text.group('rec'))-1],line)
+            judge(bf,re_text.group('rec')[1:len(re_text.group('rec'))-1],line,True)
             bf.output += logic.set_data(bf,copy_to_dec,-1,None,1)
         elif is_integer(s_line_list[2]):
             bf.output += logic.set_data(bf,copy_to_dec,-1,1)
@@ -63,12 +64,13 @@ def judge(bf, s_line, line):
         >Add a b
         >Add a 10
         """
-        input_dec = bf.variable.index(s_line_list[1])
-        if is_integer(s_line_list[2]):
-            bf.output += logic.add_num(bf, input_dec,-1,int(s_line_list[2]))
+        if s_line_list[2][0] == '{':
+            re_pattern = r"(?<rec>{(?:[^{}]+|(?&rec))*})"
+            re_text = regex.search(re_pattern, s_line)
+            judge(bf,re_text.group('rec')[1:len(re_text.group('rec'))-1],line,True)
+            bf.output += logic.add_num(bf,s_line_list[1],s_line_list[2],1)
         else:
-            input_dec1 = bf.variable.index(s_line_list[2])
-            bf.output += logic.add_num(bf,input_dec,input_dec1,None)
+            bf.output += logic.add_num(bf,s_line_list[1],s_line_list[2])
 
     elif s_line_list[0] == "Sub":
         input_dec = bf.variable.index(s_line_list[1])
@@ -97,7 +99,7 @@ def judge(bf, s_line, line):
         if s_line_list[2][0] == '{':
             re_pattern = r"(?<rec>{(?:[^{}]+|(?&rec))*})"
             re_text = regex.search(re_pattern, s_line)
-            judge(bf,re_text.group('rec')[1:len(re_text.group('rec'))-1],line)
+            judge(bf,re_text.group('rec')[1:len(re_text.group('rec'))-1],line,True)
             bf.output += logic.div_num(bf,s_line_list[1],s_line_list[2],1)
         else:
             bf.output += logic.div_num(bf,s_line_list[1],s_line_list[2])
@@ -106,7 +108,7 @@ def judge(bf, s_line, line):
         if s_line_list[2][0] == '{':
             re_pattern = r"(?<rec>{(?:[^{}]+|(?&rec))*})"
             re_text = regex.search(re_pattern, s_line)
-            judge(bf,re_text.group('rec')[1:len(re_text.group('rec'))-1],line)
+            judge(bf,re_text.group('rec')[1:len(re_text.group('rec'))-1],line,True)
             bf.output += logic.mod_num(bf,s_line_list[1],s_line_list[2],1)
         else:
             bf.output += logic.mod_num(bf,s_line_list[1],s_line_list[2])

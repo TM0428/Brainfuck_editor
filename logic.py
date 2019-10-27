@@ -367,35 +367,43 @@ def make_add_num(number):
 #       +-*/       #
 ####################
 
-def add_num(bf,input_dec,input_dec1,number=None):
+def add_num(bf,input1,input2,after_cal=None):
     """
     This function use max 2 calc memory
     """
     length = bf.length * 2
-    input_dec = input_dec * 2
-    input_dec1 = input_dec1 * 2
     output = ""
-    output += copy_to_cal(bf,input_dec)
-    if number:
-        output += make_add_num(number)
+    if after_cal:
+        if bf.piv < length:
+            for i in range(length-bf.piv):
+                output += '>'
+        elif length < bf.piv:
+            for i in range(bf.piv-length):
+                output += '<'
+        output += "[>>+<<-]"
+    if is_integer(input1):
+        if bf.piv < length:
+            for i in range(length-bf.piv):
+                output += '>'
+        elif length < bf.piv:
+            for i in range(bf.piv-length):
+                output += '<'
+        output += make_add_num(int(input1))
     else:
-        output += copy_to_cal(bf,input_dec1)
+        input_dec = bf.variable.index(input1) * 2
+        output += copy_to_cal(bf,input_dec)
+    #bf.piv = length
+    if after_cal:
+        output += ">>[<<+>>-]<<"
+    elif is_integer(input2):
+        output += make_add_num(int(input2))
+    else:
+        input_dec = bf.variable.index(input2) * 2
+        output += copy_to_cal(bf,input_dec)
     bf.piv = length
     return output
-    """
-    for i in range(length):
-        output += '<'
-    output += "[-]"
-    for i in range(length):
-        output += '>'
-    output += '['
-    for i in range(length):
-        output += '<'
-    output += '+'
-    for i in range(length):
-        output += '>'
-    output += "-]"
-    """
+
+
 def sub_num(bf,input_dec,input_dec1,number=None):
     """
     This function use max 3 calc memory
@@ -455,7 +463,7 @@ def div_num(bf,input1,input2,after_cal=None):
         elif length < bf.piv:
             for i in range(bf.piv-length):
                 output += '<'
-        output += make_add_num(input1)
+        output += make_add_num(int(input1))
     else:
         input_dec = bf.variable.index(input1) * 2
         output += copy_to_cal(bf,input_dec)
@@ -464,7 +472,7 @@ def div_num(bf,input1,input2,after_cal=None):
         output += ">>[<+>-]<<"
     elif is_integer(input2):
         output += '>'
-        output += make_add_num(input2)
+        output += make_add_num(int(input2))
         output += '<'
     else:
         input_dec = bf.variable.index(input2) * 2
@@ -477,6 +485,14 @@ def div_num(bf,input1,input2,after_cal=None):
 def mod_num(bf,input1,input2,after_cal=None):
     length = bf.length * bf.data_memory
     output = ""
+    if after_cal:
+        if bf.piv < length:
+            for i in range(length-bf.piv):
+                output += '>'
+        elif length < bf.piv:
+            for i in range(bf.piv-length):
+                output += '<'
+        output += "[>>+<<-]"
     if is_integer(input1):
         if bf.piv < length:
             for i in range(length-bf.piv):
@@ -484,14 +500,16 @@ def mod_num(bf,input1,input2,after_cal=None):
         elif length < bf.piv:
             for i in range(bf.piv-length):
                 output += '<'
-        output += make_add_num(input1)
+        output += make_add_num(int(input1))
     else:
         input_dec = bf.variable.index(input1) * 2
         output += copy_to_cal(bf,input_dec)
     #bf.pit = length
-    if is_integer(input2):
+    if after_cal:
+        output += ">>[<+>-]<<"
+    elif is_integer(input2):
         output += '>'
-        output += make_add_num(input2)
+        output += make_add_num(int(input2))
         output += '<'
     else:
         input_dec = bf.variable.index(input2) * 2
