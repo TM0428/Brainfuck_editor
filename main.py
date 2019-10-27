@@ -194,6 +194,14 @@ def judge(bf, s_line, line):
         else:
             input_dec1 = bf.variable.index(s_line_list[2])
             bf.output += logic.logical_operation(bf,"and",input_dec,input_dec1,None)
+    
+    elif s_line_list[0] == "Or":
+        input_dec = bf.variable.index(s_line_list[1])
+        if is_integer(s_line_list[2]):
+            bf.output += logic.logical_operation(bf,"or",input_dec,-1,int(s_line_list[2]))
+        else:
+            input_dec1 = bf.variable.index(s_line_list[2])
+            bf.output += logic.logical_operation(bf,"or",input_dec,input_dec1,None)
 
 
 
