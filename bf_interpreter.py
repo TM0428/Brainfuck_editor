@@ -27,20 +27,24 @@ class Bf_interpreter:
         for i in range(len(self.source)):
             if self.source[i] == "[":
                 matching_stack.append(i)
-                #print(matching_stack)
             elif self.source[i] == "]":
                 if len(matching_stack) == 0:
-                    self.debug("There is no matching parenthesis.")
-                    sys.exit(1)
+                    #self.debug("There is no matching parenthesis.")
+                    #sys.exit(1)
+                    # 対応する括弧が存在しなくてもコンパイル時エラーにはせず、実行時に括弧の要件を満たした際に実行時エラーとなるようにした
+                    self.matching_par[i] = -1
                 else:
                     stack_top = matching_stack[-1]
                     matching_stack.pop()
                     self.matching_par[i] = stack_top
                     self.matching_par[stack_top] = i
-                    #print(matching_stack)
+        for v in matching_stack:
+            self.matching_par[v]=len(self.source)
+        """
         if len(matching_stack) != 0:
             self.debug("There is no matching parenthesis.")
             sys.exit(1)
+        """
 
     def read(self) -> int:# ,
         if len(self.inputs)>self.inputs_index:
@@ -85,10 +89,15 @@ class Bf_interpreter:
     def right_parenthesis(self,index): # [
         if self.memory[self.header]==0:
             self.source_index = self.matching_par[index]
+            if self.source_index==len(self.source):
+                self.debug("out of range(limit exceeded due to right parenthesis)")
     
     def left_parenthesis(self,index): # ]
         if self.memory[self.header]!=0:
             self.source_index = self.matching_par[index]
+            if self.source_index==-1:
+                self.debug("out of range(limit below due to left parenthesis)")
+    
     
     def interperter(self):
         while self.source_index < len(self.source):
