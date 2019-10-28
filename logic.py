@@ -74,20 +74,20 @@ def copy_to_cal(bf,input_dec,number=0):
     bf.piv = length
     return output
 
-def move_to_mem(bf,input_dec,copy_to_dec):
+def move_to_mem(bf,input_dec,copy_to_mem):
     """
-    reset the copy_to_dec and move input_dec to copy_to_dec
+    reset the copy_to_mem and move input_dec to copy_to_mem
     YOU SHOULD DOUBLED NUMBER
     """
     output = ""
-    if bf.piv < copy_to_dec:
-        for i in range(copy_to_dec-bf.piv):
+    if bf.piv < copy_to_mem:
+        for i in range(copy_to_mem-bf.piv):
             output += '>'
-    elif copy_to_dec < bf.piv:
-        for i in range(bf.piv-copy_to_dec):
+    elif copy_to_mem < bf.piv:
+        for i in range(bf.piv-copy_to_mem):
             output += '<'
     output += "[-]"
-    bf.piv = copy_to_dec
+    bf.piv = copy_to_mem
 
     if bf.piv < input_dec:
         for i in range(input_dec-bf.piv):
@@ -96,83 +96,70 @@ def move_to_mem(bf,input_dec,copy_to_dec):
         for i in range(bf.piv-input_dec):
             output += '<'
     output += '['
-    if input_dec < copy_to_dec:
-        for i in range(copy_to_dec - input_dec):
+    if input_dec < copy_to_mem:
+        for i in range(copy_to_mem - input_dec):
             output += '>'
         output += '+'
-        for i in range(copy_to_dec - input_dec):
+        for i in range(copy_to_mem - input_dec):
             output += '<'
         output += "-]"
 
-    elif copy_to_dec < input_dec:
-        for i in range(input_dec - copy_to_dec):
+    elif copy_to_mem < input_dec:
+        for i in range(input_dec - copy_to_mem):
             output += '<'
         output += '+'
-        for i in range(input_dec - copy_to_dec):
+        for i in range(input_dec - copy_to_mem):
             output += '>'
         output += "-]"
     bf.piv = input_dec
     return output
 
 
-def set_data(bf,copy_to_dec,input_dec,number=None,after_cal=None):
-    copy_to_dec = copy_to_dec * 2
-    input_dec = input_dec * 2
+def set_data(bf,copy_to_mem,input1,after_cal=None):
+    copy_to_mem = copy_to_mem * 2
+    #input_dec = input_dec * 2
     length = bf.length * 2
     output = ""
-    if bf.piv < copy_to_dec:
-        for i in range(copy_to_dec-bf.piv):
-            output += '>'
-    elif copy_to_dec < bf.piv:
-        for i in range(bf.piv-copy_to_dec):
-            output += '<'
+    output += move_header(bf,copy_to_mem)
     output += "[-]"
-    bf.piv = copy_to_dec
+    bf.piv = copy_to_mem
     if after_cal:
-        if bf.piv < length:
-            for i in range(length-bf.piv):
-                output += '>'
-        elif length < bf.piv:
-            for i in range(bf.piv-length):
-                output += '<'
+        output += move_header(bf,length)
         output += '['
         bf.piv = length
-        for i in range(bf.piv-copy_to_dec):
+        for i in range(bf.piv-copy_to_mem):
             output += '<'
         output += '+'
-        for i in range(bf.piv-copy_to_dec):
+        for i in range(bf.piv-copy_to_mem):
             output += '>'
         output += "-]"
         bf.piv = length
         return output
-    elif number:
-        output += make_add_num(number)
+    elif is_integer(input1):
+        output += make_add_num(int(input1))
         for i in range(length-bf.piv):
             output += '>'
         bf.piv = length
         return output
     else:
-        if bf.piv < input_dec:
-            for i in range(input_dec-bf.piv):
-                output += '>'
-        elif input_dec < bf.piv:
-            for i in range(bf.piv-input_dec):
-                output += '<'
+        input_dec = input1 * 2
+        output += move_header(bf,input_dec)
         bf.piv = input_dec
         output += "[>+<"
-        if bf.piv < copy_to_dec:
-            for i in range(copy_to_dec-bf.piv):
+        if bf.piv < copy_to_mem:
+            for i in range(copy_to_mem-bf.piv):
                 output += '>'
             output += '+'
-            for i in range(copy_to_dec-bf.piv):
+            for i in range(copy_to_mem-bf.piv):
                 output += '<'
-        elif copy_to_dec < bf.piv:
-            for i in range(bf.piv-copy_to_dec):
+        elif copy_to_mem < bf.piv:
+            for i in range(bf.piv-copy_to_mem):
                 output += '<'
             output += '+'
-            for i in range(bf.piv-copy_to_dec):
+            for i in range(bf.piv-copy_to_mem):
                 output += '>'
         output += "-]>[<+>-]<"
+        output += move_header(bf,length)
         bf.piv = length
         return output
 
@@ -421,22 +408,31 @@ def sub_num(bf,input1,input2,after_cal=None):
 
 
 
-def mul_num(bf,input_dec,input_dec1,number=None):
+def mul_num(bf,input1,input2,after_cal=None):
     """
     This function use max 4 calc memory
     """
     length = bf.length * 2
-    input_dec = input_dec * 2
-    input_dec1 = input_dec1 * 2
     output = ""
-    output += copy_to_cal(bf,input_dec)
-
-    if number:
+    if after_cal:
+        output += move_header(bf,length)
+        output += "[>>+<<-]"
+    if is_integer(input1):
+        output += move_header(bf,length)
+        output += make_add_num(int(input1))
+    else:
+        input_dec = bf.variable.index(input1) * 2
+        output += copy_to_cal(bf,input_dec)
+    #bf.piv = length
+    if after_cal:
+        output += ">>[<+>-]<<[->[>+>+<<-]>[<+>-]<<]>>>[<<<+>>>-]<<[-]<"
+    elif is_integer(input2):
         output += "[->"
-        output += make_add_num(number)
+        output += make_add_num(int(input2))
         output += "<]>[<+>-]<"
     else:
-        output += copy_to_cal(bf,input_dec1,1)
+        input_dec = bf.variable.index(input2) * 2
+        output += copy_to_cal(bf,input_dec,1)
         output += "[->[>+>+<<-]>[<+>-]<<]>>>[<<<+>>>-]<<[-]<"
     bf.piv = length
     return output
@@ -556,12 +552,7 @@ def else_output(bf):
     """
     length = bf.length * 2
     output = ""
-    if bf.piv < length:
-        for i in range(length-bf.piv):
-            output += '>'
-    elif length < bf.piv:
-        for i in range(bf.piv-length):
-            output += '<'
+    output += move_header(bf,length)
     output += "]>[-<"
     bf.piv = length
     return output
@@ -619,7 +610,7 @@ def logical_operation(bf,op,input_dec,input_dec1,number=None):
     this library is logical operation
     and or not nand nor xor
     op input_dec and (input_dec1 or number)
-    this function use max 3 calc memory([bf.length,bf.length+2])
+    this function use max 3 calc memory([length,length+2])
     """
     length = bf.length * 2
     input_dec = input_dec * 2
@@ -665,6 +656,12 @@ def logical_operation(bf,op,input_dec,input_dec1,number=None):
         output += "]"
         #go to length
         output += move_header(bf,length)
+        """
+        output += copy_to_cal(bf,input_dec)
+        output += "[>>+<<[-]]+>>[[-]<<-"
+        output += copy_to_cal(bf,input_dec1)
+        output += ">>+<<[>>-<+<[-]]>>[-]]<<[-]>[<+>-]<"
+        """
     elif op=="or":
         #[flag]に1をセットして引数の値が1でなら[flag]を0にして停止する
         flag = length+2
@@ -721,4 +718,12 @@ def logical_operation(bf,op,input_dec,input_dec1,number=None):
         
         #go to length
         output += move_header(bf,length)
+
+        """
+        output = ""
+        output += copy_to_cal(bf,input_dec)
+        output += "[>>+<<[-]]+>>[<<->+>-]<<[-"
+        output += copy_to_cal(bf,input_dec1)
+        output += "[>+<[-]]]>[<+>-]<"
+        """
     return output

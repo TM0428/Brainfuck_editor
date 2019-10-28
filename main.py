@@ -41,17 +41,13 @@ def judge(bf, s_line, line, in_loop=False):
         bf.length = len(bf.variable)
 
     elif s_line_list[0] == "Set":
-        copy_to_dec = bf.variable.index(s_line_list[1])
         if s_line_list[2][0] == '{':
             re_pattern = r"(?<rec>{(?:[^{}]+|(?&rec))*})"
             re_text = regex.search(re_pattern, s_line)
             judge(bf,re_text.group('rec')[1:len(re_text.group('rec'))-1],line,True)
-            bf.output += logic.set_data(bf,copy_to_dec,-1,None,1)
-        elif is_integer(s_line_list[2]):
-            bf.output += logic.set_data(bf,copy_to_dec,-1,1)
+            bf.output += logic.set_data(bf,s_line_list[1],-1,1)
         else:
-            input_dec = bf.variable.index(s_line_list[2])
-            bf.output += logic.set_data(bf,copy_to_dec,input_dec)
+            bf.output += logic.set_data(bf,s_line_list[1],s_line_list[2])
 
 
     elif s_line_list[0] == "Inc":
