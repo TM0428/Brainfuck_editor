@@ -54,14 +54,25 @@ class UI(QWidget):
     def initUI(self):
         self.sample1 = QLabel("This is comment", self)
         self.sample2 = QLineEdit(self)
+        self.button_pass = QPushButton("パスを選択...", self)
+        self.button_pass.clicked.connect(self.ShowDialog)
         layout = QGridLayout()
         layout.setSpacing(10)
         layout.addWidget(self.sample1,0,0)
         layout.addWidget(self.sample2,1,0)
+        layout.addWidget(self.button_pass,1,2)
         self.setLayout(layout)
         self.show()
 
-
+    @pyqtSlot()
+    # epubからメタデータを取得
+    def ShowDialog(self):
+        text = text_dir
+        fname = QFileDialog.getOpenFileName(self, 'Open file',text,"テキストファイル(*.txt)")
+        path = fname[0]
+        if path != "":
+            QMessageBox.question(self, "Message", "the file dir is " + path, QMessageBox.Ok, QMessageBox.Ok)
+            self.sample2.setText(path)
 
 
 def main():
