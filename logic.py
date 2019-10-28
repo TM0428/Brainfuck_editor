@@ -569,11 +569,12 @@ def endif_output(bf):
     output += move_header(bf,length)
     if bf.in_else:
         if bf.in_else%2 == 1:
-            output += ">]<"
+            output += ">]"
         else:
-            output += ']'
+            output += ']>'
         for i in range(bf.in_else//2):
-            output += '>]<]'
+            output += ']'
+        output += '<'
     else:
         output += "]>[-]<"
     bf.piv = length

@@ -8,15 +8,15 @@ class Brainfuck:
     piv is memory header.
     length is len(variable)
     """
-    variable = ["Res"]
-    for_var = []
-    piv = 0
-    length = 1
-    output = ""
-    in_else = 0
-    data_memory = 2
+    variable: list = ["Res"]
+    for_var: list = []
+    piv: int = 0
+    length: int = 1
+    output: str = ""
+    in_else: int = 0
+    data_memory: int = 2
 
-def is_integer(n):
+def is_integer(n: int) -> bool:
     try:
         float(n)
     except ValueError:
@@ -24,7 +24,7 @@ def is_integer(n):
     else:
         return float(n).is_integer()
 
-def judge(bf, s_line, line, in_loop=False,first=False):
+def judge(bf: Brainfuck, s_line: str, line: int, in_loop: bool =False,first: bool =False):
     if not in_loop and not first:
         bf.output += logic.first_step(bf)
     s_line_list = s_line.replace('\n','').split(' ')
@@ -213,6 +213,38 @@ def judge(bf, s_line, line, in_loop=False,first=False):
 
 
 
+def output_opti(bf_code: str) -> str:
+    output = ""
+    stack = 0
+    for i in range(len(bf_code)-1):
+        if stack:
+            if bf_code[i] == ']':
+                stack -= 1
+            elif bf_code[i] == '[':
+                stack += 1
+        elif bf_code[i] == ']' and bf_code[i+1] == '[':
+            stack += 1
+            output += bf_code[i]
+        else:
+            output += bf_code[i]
+    if not stack:
+        output += bf_code[len(bf_code)-1]
+    next = []
+    for i in range(len(bf_code)):
+        if i == 0:
+            continue
+        if bf_code[i-1] == '>' and bf_code[i] == '<':
+            next.pop()
+        elif bf_code[i-1] == '<' and bf_code[i] == '>':
+            next.pop()
+        else:
+            next.append(bf_code[i])
+    if bf_code[len(bf_code)-1] != '<' and bf_code[len(bf_code)-1] != '>':
+        next.append(bf_code[len(bf_code)-1])
+    output = ''.join(next)
+    return output
+
+
 args = sys.argv
 #args[1] is file name
 if __name__ == "__main__":
@@ -236,4 +268,5 @@ if __name__ == "__main__":
             #print(brainfuck.piv)
 
             line += 1
-        print(brainfuck.output)
+        #print(brainfuck.output)
+        print(output_opti(brainfuck.output))
