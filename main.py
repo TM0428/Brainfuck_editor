@@ -201,6 +201,8 @@ def judge(bf, s_line, line, in_loop=False):
         else:
             input_dec1 = bf.variable.index(s_line_list[2])
             bf.output += logic.logical_operation(bf,"or",input_dec,input_dec1,None)
+    elif s_line_list[0] == "test":
+        bf.output += logic.test(bf,s_line_list[2],s_line_list[1],s_line_list[3])
 
 
 

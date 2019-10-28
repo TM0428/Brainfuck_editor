@@ -116,7 +116,7 @@ def move_to_mem(bf,input_dec,copy_to_mem):
 
 
 def set_data(bf,copy_to_mem,input1,after_cal=None):
-    copy_to_mem = copy_to_mem * 2
+    copy_to_mem = bf.variable.index(copy_to_mem) * 2
     #input_dec = input_dec * 2
     length = bf.length * 2
     output = ""
@@ -605,16 +605,54 @@ def comparison(bf,com):
     return output
 
 
-def logical_operation(bf,op,input_dec,input_dec1,number=None):
+def comparison_ex(bf,op,input1,input2):
+    length = bf.length * 2
+    output = ""
+    """
+    if after_cal:
+        output += move_header(bf,length)
+        output += "[>>+<<-]"
+    """
+    if is_integer(input1):
+        output += move_header(bf,length)
+        output += make_add_num(int(input1))
+    else:
+        input_dec = bf.variable.index(input1) * 2
+        output += copy_to_cal(bf,input_dec)
+    #bf.pit = length
+    """
+    if after_cal:
+        output += ">>[<+>-]<<"
+    """
+    if is_integer(input2):
+        output += '>'
+        output += make_add_num(int(input2))
+        output += '<'
+    else:
+        input_dec = bf.variable.index(input2) * 2
+        output += copy_to_cal(bf,input_dec,1)
+    #bf.pit = length
+
+
+    if op == "and":
+        output += "[>>+<<[-]]+>>[<<->[<+>[-]]<[>+<-]>>-]<<[-]>[<+>-]<"
+    elif op == "or":
+        output += "[>>+<<[-]]>>[<[-]+>-]<[<+>[-]]<"
+    bf.piv = length
+    return output
+
+
+
+def logical_operation(bf,op,input1,input2,number=None):
     """
     this library is logical operation
     and or not nand nor xor
-    op input_dec and (input_dec1 or number)
+    op input1 and (input2 or number)
     this function use max 3 calc memory([length,length+2])
     """
     length = bf.length * 2
-    input_dec = input_dec * 2
-    input_dec1 = input_dec1 * 2
+    input1 = input1 * 2
+    input2 = input2 * 2
     output = ""
     piv = bf.piv
     if op == "and":
@@ -623,7 +661,7 @@ def logical_operation(bf,op,input_dec,input_dec1,number=None):
         output += move_header(bf,flag)
         output += "++"
 
-        output += copy_to_cal(bf,input_dec)
+        output += copy_to_cal(bf,input1)
         output += move_header(bf,length)
         output += "["
         output += move_header(bf,flag)
@@ -636,7 +674,7 @@ def logical_operation(bf,op,input_dec,input_dec1,number=None):
             #set bf.length number(also use bf.length+1) 
             output += make_add_num(number)
         else:
-            output += copy_to_cal(bf,input_dec1)
+            output += copy_to_cal(bf,input2)
         output += move_header(bf,length)
         output += "["
         output += move_header(bf,flag)
@@ -657,9 +695,9 @@ def logical_operation(bf,op,input_dec,input_dec1,number=None):
         #go to length
         output += move_header(bf,length)
         """
-        output += copy_to_cal(bf,input_dec)
+        output += copy_to_cal(bf,input1)
         output += "[>>+<<[-]]+>>[[-]<<-"
-        output += copy_to_cal(bf,input_dec1)
+        output += copy_to_cal(bf,input2)
         output += ">>+<<[>>-<+<[-]]>>[-]]<<[-]>[<+>-]<"
         """
     elif op=="or":
@@ -668,10 +706,10 @@ def logical_operation(bf,op,input_dec,input_dec1,number=None):
         output += move_header(bf,flag)
         output += "+"
 
-        output += copy_to_cal(bf,input_dec)
+        output += copy_to_cal(bf,input1)
         output += move_header(bf,length)
         output += "["
-        #[input_dec]が1ならflag=0
+        #[input1]が1ならflag=0
         output += move_header(bf,flag)
         output += "[-]"
         output += move_header(bf,length)
@@ -691,10 +729,10 @@ def logical_operation(bf,op,input_dec,input_dec1,number=None):
             #set bf.length number(also use bf.length+1) 
             output += make_add_num(number)
         else:
-            output += copy_to_cal(bf,input_dec1)
+            output += copy_to_cal(bf,input2)
         output += move_header(bf,length)
         output += "["
-        #([input_dec1] or number)が1ならflag=0
+        #([input2] or number)が1ならflag=0
         output += move_header(bf,flag)
         output += "[-]"
         output += move_header(bf,length)
@@ -721,9 +759,9 @@ def logical_operation(bf,op,input_dec,input_dec1,number=None):
 
         """
         output = ""
-        output += copy_to_cal(bf,input_dec)
+        output += copy_to_cal(bf,input1)
         output += "[>>+<<[-]]+>>[<<->+>-]<<[-"
-        output += copy_to_cal(bf,input_dec1)
+        output += copy_to_cal(bf,input2)
         output += "[>+<[-]]]>[<+>-]<"
         """
     return output
