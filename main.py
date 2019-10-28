@@ -24,8 +24,8 @@ def is_integer(n):
     else:
         return float(n).is_integer()
 
-def judge(bf, s_line, line, in_loop=False,first=None):
-    if not in_loop:
+def judge(bf, s_line, line, in_loop=False,first=False):
+    if not in_loop and not first:
         bf.output += logic.first_step(bf)
     s_line_list = s_line.replace('\n','').split(' ')
     if s_line_list[0] == "Var":
