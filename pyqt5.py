@@ -52,17 +52,41 @@ class UI(QWidget):
         self.initUI()
 
     def initUI(self):
-        self.sample1 = QLabel("This is comment", self)
-        self.sample2 = QLineEdit(self)
+        self.path_label = QLabel("path", self)
+        self.bf_label = QLabel("bf code", self)
+        self.input_label = QLabel("input", self)
+        self.output_label = QLabel("output", self)
+        
+        self.path_text = QLineEdit(self)
         self.txt_box = QTextEdit(self)
+        self.bf_box = QTextEdit(self)
+        self.input_box = QTextEdit(self)
+        self.output_box = QTextEdit(self)
         self.button_pass = QPushButton("パスを選択...", self)
         self.button_pass.clicked.connect(self.ShowDialog)
+
+
+        layoutA = QGridLayout()
+        layoutA.setSpacing(10)
+        layoutA.addWidget(self.path_label,0,0)
+        layoutA.addWidget(self.path_text,1,0)
+        layoutA.addWidget(self.txt_box,2,0)
+        layoutA.addWidget(self.button_pass,1,2)
+
+        layoutB = QGridLayout()
+        layoutB.addWidget(self.bf_label,0,0)
+        layoutB.addWidget(self.bf_box,1,0)
+
+        layoutC = QGridLayout()
+        layoutC.addWidget(self.input_label,0,0)
+        layoutC.addWidget(self.input_box,1,0)
+        layoutC.addWidget(self.output_label,2,0)
+        layoutC.addWidget(self.output_box,3,0)
+
         layout = QGridLayout()
-        layout.setSpacing(10)
-        layout.addWidget(self.sample1,0,0)
-        layout.addWidget(self.sample2,1,0)
-        layout.addWidget(self.txt_box,2,0)
-        layout.addWidget(self.button_pass,1,2)
+        layout.addLayout(layoutA,0,0)
+        layout.addLayout(layoutB,0,1)
+        layout.addLayout(layoutC,1,0,1,2)
         self.setLayout(layout)
         self.show()
 
