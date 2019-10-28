@@ -9,6 +9,7 @@ class Brainfuck:
     length is len(variable)
     """
     variable = ["Res"]
+    for_var = []
     piv = 0
     length = 1
     output = ""
@@ -23,8 +24,9 @@ def is_integer(n):
     else:
         return float(n).is_integer()
 
-def judge(bf, s_line, line):
-    bf.output += logic.first_step(bf)
+def judge(bf, s_line, line, in_loop=False,first=None):
+    if not in_loop:
+        bf.output += logic.first_step(bf)
     s_line_list = s_line.replace('\n','').split(' ')
     if s_line_list[0] == "Var":
         """
@@ -40,17 +42,13 @@ def judge(bf, s_line, line):
         bf.length = len(bf.variable)
 
     elif s_line_list[0] == "Set":
-        copy_to_dec = bf.variable.index(s_line_list[1])
         if s_line_list[2][0] == '{':
             re_pattern = r"(?<rec>{(?:[^{}]+|(?&rec))*})"
             re_text = regex.search(re_pattern, s_line)
-            judge(bf,re_text.group('rec')[1:len(re_text.group('rec'))-1],line)
-            bf.output += logic.set_data(bf,copy_to_dec,-1,None,1)
-        elif is_integer(s_line_list[2]):
-            bf.output += logic.set_data(bf,copy_to_dec,-1,1)
+            judge(bf,re_text.group('rec')[1:len(re_text.group('rec'))-1],line,True)
+            bf.output += logic.set_data(bf,s_line_list[1],-1,1)
         else:
-            input_dec = bf.variable.index(s_line_list[2])
-            bf.output += logic.set_data(bf,copy_to_dec,input_dec)
+            bf.output += logic.set_data(bf,s_line_list[1],s_line_list[2])
 
 
     elif s_line_list[0] == "Inc":
@@ -60,25 +58,25 @@ def judge(bf, s_line, line):
     elif s_line_list[0] == "Add":
         """
         This is add function
-        >Add a b c
+        >Add a b
         >Add a 10
-        its mean "c=a+b", but 'c' doesn't have to write. 
-        if you don't write, the value is in the variable "Res"
         """
-        input_dec = bf.variable.index(s_line_list[1])
-        if is_integer(s_line_list[2]):
-            bf.output += logic.add_num(bf, input_dec,-1,int(s_line_list[2]))
+        if s_line_list[2][0] == '{':
+            re_pattern = r"(?<rec>{(?:[^{}]+|(?&rec))*})"
+            re_text = regex.search(re_pattern, s_line)
+            judge(bf,re_text.group('rec')[1:len(re_text.group('rec'))-1],line,True)
+            bf.output += logic.add_num(bf,s_line_list[1],s_line_list[2],1)
         else:
-            input_dec1 = bf.variable.index(s_line_list[2])
-            bf.output += logic.add_num(bf,input_dec,input_dec1,None)
+            bf.output += logic.add_num(bf,s_line_list[1],s_line_list[2])
 
     elif s_line_list[0] == "Sub":
-        input_dec = bf.variable.index(s_line_list[1])
-        if is_integer(s_line_list[2]):
-            bf.output += logic.sub_num(bf, input_dec, -1, int(s_line_list[2]))
+        if s_line_list[2][0] == '{':
+            re_pattern = r"(?<rec>{(?:[^{}]+|(?&rec))*})"
+            re_text = regex.search(re_pattern, s_line)
+            judge(bf,re_text.group('rec')[1:len(re_text.group('rec'))-1],line,True)
+            bf.output += logic.sub_num(bf,s_line_list[1],s_line_list[2],1)
         else:
-            input_dec1 = bf.variable.index(s_line_list[2])
-            bf.output += logic.sub_num(bf, input_dec, input_dec1, None)
+            bf.output += logic.sub_num(bf,s_line_list[1],s_line_list[2])
 
 
     elif s_line_list[0] == "Mul":
@@ -88,18 +86,31 @@ def judge(bf, s_line, line):
         >Mul a 10
         if you don't write, the value is in the variable "Res"
         """
-        input_dec = bf.variable.index(s_line_list[1])
-        if is_integer(s_line_list[2]):
-            bf.output += logic.mul_num(bf, input_dec, -1, int(s_line_list[2]))
+        if s_line_list[2][0] == '{':
+            re_pattern = r"(?<rec>{(?:[^{}]+|(?&rec))*})"
+            re_text = regex.search(re_pattern, s_line)
+            judge(bf,re_text.group('rec')[1:len(re_text.group('rec'))-1],line,True)
+            bf.output += logic.mul_num(bf,s_line_list[1],s_line_list[2],1)
         else:
-            input_dec1 = bf.variable.index(s_line_list[2])
-            bf.output += logic.mul_num(bf, input_dec, input_dec1, None)
+            bf.output += logic.mul_num(bf,s_line_list[1],s_line_list[2])
 
     elif s_line_list[0] == "Div":
-        bf.output += logic.div_num(bf,s_line_list[1],s_line_list[2])
+        if s_line_list[2][0] == '{':
+            re_pattern = r"(?<rec>{(?:[^{}]+|(?&rec))*})"
+            re_text = regex.search(re_pattern, s_line)
+            judge(bf,re_text.group('rec')[1:len(re_text.group('rec'))-1],line,True)
+            bf.output += logic.div_num(bf,s_line_list[1],s_line_list[2],1)
+        else:
+            bf.output += logic.div_num(bf,s_line_list[1],s_line_list[2])
 
     elif s_line_list[0] == "Mod":
-        bf.output += logic.mod_num(bf,s_line_list[1],s_line_list[2])
+        if s_line_list[2][0] == '{':
+            re_pattern = r"(?<rec>{(?:[^{}]+|(?&rec))*})"
+            re_text = regex.search(re_pattern, s_line)
+            judge(bf,re_text.group('rec')[1:len(re_text.group('rec'))-1],line,True)
+            bf.output += logic.mod_num(bf,s_line_list[1],s_line_list[2],1)
+        else:
+            bf.output += logic.mod_num(bf,s_line_list[1],s_line_list[2])
 
     elif s_line_list[0] == "Scan":
         """
@@ -142,12 +153,7 @@ def judge(bf, s_line, line):
         making:
         and,or
         """
-        input_dec = bf.variable.index(s_line_list[1])
-        if is_integer(s_line_list[3]):
-            bf.output += logic.if_output(bf, s_line_list[2], input_dec, -1, int(s_line_list[3]))
-        else:
-            input_dec1 = bf.variable.index(s_line_list[3])
-            bf.output += logic.if_output(bf, s_line_list[2], input_dec, input_dec1)
+        bf.output += logic.if_output(bf,s_line_list[1],s_line_list[3],s_line_list[2])
 
     elif s_line_list[0] == "elif":
         """
@@ -160,12 +166,7 @@ def judge(bf, s_line, line):
         and,or
         """
         bf.in_else += 2
-        input_dec = bf.variable.index(s_line_list[1])
-        if is_integer(s_line_list[3]):
-            bf.output += logic.elif_output(bf, s_line_list[2], input_dec, -1, int(s_line_list[3]))
-        else:
-            input_dec1 = bf.variable.index(s_line_list[3])
-            bf.output += logic.elif_output(bf, s_line_list[2], input_dec, input_dec1)
+        bf.output += logic.elif_output(bf,s_line_list[1],s_line_list[3],s_line_list[2])
 
     elif s_line_list[0] == "else":
         """
@@ -179,6 +180,11 @@ def judge(bf, s_line, line):
         """
         bf.output += logic.endif_output(bf)
         bf.in_else = 0
+
+    elif s_line_list[0] == "for":
+        bf.output += logic.for_test(bf,s_line_list[1],s_line_list[2])
+    elif s_line_list[0] == "endfor":
+        bf.output += logic.endfor_test(bf)
 
     elif s_line_list[0] == "//":
         pass
@@ -202,6 +208,8 @@ def judge(bf, s_line, line):
         else:
             input_dec1 = bf.variable.index(s_line_list[2])
             bf.output += logic.logical_operation(bf,"or",input_dec,input_dec1,None)
+    elif s_line_list[0] == "test":
+        bf.output += logic.test(bf,s_line_list[2],s_line_list[1],s_line_list[3])
 
 
 
@@ -223,7 +231,7 @@ if __name__ == "__main__":
             if not s_line:
                 break
             #s_line[0] is command
-            judge(brainfuck,s_line,line)
+            judge(brainfuck,s_line,line,None,True)
             #Debug
             #print(brainfuck.piv)
 
