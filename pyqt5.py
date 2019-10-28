@@ -43,7 +43,7 @@ class MainWindow(QMainWindow):
 
 
     def versiontab(self):
-        QMessageBox.question(self, "Version", "0.0.5 beta", QMessageBox.Ok, QMessageBox.Ok)
+        QMessageBox.question(self, "Version", "0.0.1 beta", QMessageBox.Ok, QMessageBox.Ok)
 
 #UIを作成しているウィンドウ
 class UI(QWidget):
@@ -52,8 +52,14 @@ class UI(QWidget):
         self.initUI()
 
     def initUI(self):
-        standard_opf = QLabel("Standard.opf...", self)
-
+        self.sample1 = QLabel("This is comment", self)
+        self.sample2 = QLineEdit(self)
+        layout = QGridLayout()
+        layout.setSpacing(10)
+        layout.addWidget(self.sample1,0,0)
+        layout.addWidget(self.sample2,1,0)
+        self.setLayout(layout)
+        self.show()
 
 
 
