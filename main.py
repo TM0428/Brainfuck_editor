@@ -9,6 +9,7 @@ class Brainfuck:
     length is len(variable)
     """
     variable = ["Res"]
+    for_var = []
     piv = 0
     length = 1
     output = ""
@@ -23,7 +24,7 @@ def is_integer(n):
     else:
         return float(n).is_integer()
 
-def judge(bf, s_line, line, in_loop=False):
+def judge(bf, s_line, line, in_loop=False,first=None):
     if not in_loop:
         bf.output += logic.first_step(bf)
     s_line_list = s_line.replace('\n','').split(' ')
@@ -85,12 +86,13 @@ def judge(bf, s_line, line, in_loop=False):
         >Mul a 10
         if you don't write, the value is in the variable "Res"
         """
-        input_dec = bf.variable.index(s_line_list[1])
-        if is_integer(s_line_list[2]):
-            bf.output += logic.mul_num(bf, input_dec, -1, int(s_line_list[2]))
+        if s_line_list[2][0] == '{':
+            re_pattern = r"(?<rec>{(?:[^{}]+|(?&rec))*})"
+            re_text = regex.search(re_pattern, s_line)
+            judge(bf,re_text.group('rec')[1:len(re_text.group('rec'))-1],line,True)
+            bf.output += logic.mul_num(bf,s_line_list[1],s_line_list[2],1)
         else:
-            input_dec1 = bf.variable.index(s_line_list[2])
-            bf.output += logic.mul_num(bf, input_dec, input_dec1, None)
+            bf.output += logic.mul_num(bf,s_line_list[1],s_line_list[2])
 
     elif s_line_list[0] == "Div":
         if s_line_list[2][0] == '{':
@@ -179,6 +181,11 @@ def judge(bf, s_line, line, in_loop=False):
         bf.output += logic.endif_output(bf)
         bf.in_else = 0
 
+    elif s_line_list[0] == "for":
+        bf.output += logic.for_test(bf,s_line_list[1],s_line_list[2])
+    elif s_line_list[0] == "endfor":
+        bf.output += logic.endfor_test(bf)
+
     elif s_line_list[0] == "//":
         pass
 
@@ -224,7 +231,7 @@ if __name__ == "__main__":
             if not s_line:
                 break
             #s_line[0] is command
-            judge(brainfuck,s_line,line)
+            judge(brainfuck,s_line,line,None,True)
             #Debug
             #print(brainfuck.piv)
 

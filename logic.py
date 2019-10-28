@@ -765,3 +765,38 @@ def logical_operation(bf,op,input1,input2,number=None):
         output += "[>+<[-]]]>[<+>-]<"
         """
     return output
+
+
+
+##################### 
+#        for        #
+#####################
+
+def for_test(bf,var,input1):
+    length = bf.length * 2
+    output = ""
+    if is_integer(input1):
+        output += move_header(bf,length)
+        output += make_add_num(int(input1))
+    else:
+        input_dec = bf.variable.index(input1) * 2
+        output += copy_to_cal(bf,input_dec)
+    #bf.piv = length
+    bf.variable.append(var)
+    bf.for_var.append(var)
+    bf.length = len(bf.variable)
+    length += 2
+    output += "[>>"
+    bf.piv = length
+    return output
+
+def endfor_test(bf):
+    var = bf.for_var.pop()
+    input_dec = bf.variable.index(var) * 2
+    length = bf.length * 2
+    output = ""
+    output += move_header(bf,input_dec)
+    output += "-]"
+    output += move_header(bf,length)
+    bf.piv = length
+    return output
