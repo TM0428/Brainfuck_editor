@@ -11,7 +11,6 @@ class Bf_interpreter:
         self.outputs: str = ""          #bfの出力
         self.source: str = ""           #bfのソースコード
         self.matching_par: List[int]    #対応する括弧の座標(括弧でない場合は-1)
-        self.step_index:int = 0         #ステップ実行用の番号
         self.source_index: int = 0      #ソースコードのどこにいるか
     
     def read_source(self):
@@ -106,7 +105,7 @@ class Bf_interpreter:
             #self.debug("")
 
     def step_run(self):
-        i = self.step_index
+        i = self.source_index
         if self.source[i] == ">":
             self.right()
         elif self.source[i] == "<":
@@ -123,7 +122,7 @@ class Bf_interpreter:
             self.right_parenthesis(i)
         elif self.source[i] == "]":
             self.left_parenthesis(i)
-        self.step_index += 1
+        self.source_index += 1
     
 if __name__ == "__main__":
     bf_ip = Bf_interpreter()
