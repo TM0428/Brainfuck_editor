@@ -39,7 +39,7 @@ class Bf_interpreter:
                     self.matching_par[stack_top] = i
                     #print(matching_stack)
         if len(matching_stack) != 0:
-            self.debug("There is no matching parenthesis.(right parenthesis is over)")
+            self.debug("There is no matching parenthesis.")
             sys.exit(1)
 
     def read(self) -> int:# ,
