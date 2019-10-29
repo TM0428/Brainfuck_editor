@@ -130,6 +130,8 @@ class UI(QWidget):
         bfi.set_source(self.bf_box.toPlainText())
         bfi.parsing()
         bfi.interperter()
+        if bfi.err == 1:
+            QMessageBox.warning(self,"Warning","Input is not defined.", QMessageBox.Ok)
         self.output_box.setText(bfi.outputs)
         
 def main():

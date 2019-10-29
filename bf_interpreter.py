@@ -12,6 +12,8 @@ class Bf_interpreter:
         self.source: str = ""           #bfのソースコード
         self.matching_par: List[int]    #対応する括弧の座標(括弧でない場合は-1)
         self.source_index: int = 0      #ソースコードのどこにいるか
+        ##write TM
+        self.err: int = 0               #エラー対処
     
     def read_source(self):
         sources: List[str] = [line.rstrip() for line in sys.stdin]
@@ -52,6 +54,13 @@ class Bf_interpreter:
             self.inputs_index += 1
             self.memory[self.header] = res
         else:
+            """
+            print('Error: Input is not Defined.', file=sys.stderr)
+            sys.exit(1)
+            """
+            self.err = 1
+            self.source_index = len(self.source)
+            #NULL入力は環境によって異なるため、エラーにするべき(AtCoderであれば-1なので)
             self.memory[self.header] = 0
 
     def write(self):  # .
