@@ -15,7 +15,13 @@ class Bf_interpreter:
     
     def read_source(self):
         sources: List[str] = [line.rstrip() for line in sys.stdin]
-        self.source = "".join(sources)
+        #self.source = "".join(sources)
+        return "".join(sources)
+
+    def set_source(self,source):
+        self.source = source
+
+    def parsing(self):
         self.matching_par = [-1 for i in range(len(self.source))]
         matching_stack: List[int] = []
         for i in range(len(self.source)):
@@ -23,24 +29,30 @@ class Bf_interpreter:
                 matching_stack.append(i)
             elif self.source[i] == "]":
                 if len(matching_stack) == 0:
-                    debug("There is no matching parenthesis.")
-                    sys.exit(1)
+                    #self.debug("There is no matching parenthesis.")
+                    #sys.exit(1)
+                    # 対応する括弧が存在しなくてもコンパイル時エラーにはせず、実行時に括弧の要件を満たした際に実行時エラーとなるようにした
+                    self.matching_par[i] = -1
                 else:
                     stack_top = matching_stack[-1]
                     matching_stack.pop()
                     self.matching_par[i] = stack_top
                     self.matching_par[stack_top] = i
+        for v in matching_stack:
+            self.matching_par[v]=len(self.source)
+        """
         if len(matching_stack) != 0:
-            debug("There is no matching parenthesis.")
+            self.debug("There is no matching parenthesis.")
             sys.exit(1)
+        """
 
     def read(self) -> int:# ,
         if len(self.inputs)>self.inputs_index:
-            res:str = self.inputs[self.inputs_index]
+            res:int = ord(self.inputs[self.inputs_index])
             self.inputs_index += 1
-            return res
+            self.memory[self.header] = res
         else:
-            return 0
+            self.memory[self.header] = 0
 
     def write(self):  # .
         self.outputs += chr(self.memory[self.header])
@@ -67,20 +79,25 @@ class Bf_interpreter:
     def right(self): # >
         self.header += 1
         if self.memory_size <= self.header:
-            debug("out of range(limit exceeded)")
+            self.debug("out of range(limit exceeded)")
 
     def left(self):  # <
         self.header -= 1
         if 0 > self.header:
-            debug("out of range(limit below)")
+            self.debug("out of range(limit below)")
 
     def right_parenthesis(self,index): # [
         if self.memory[self.header]==0:
             self.source_index = self.matching_par[index]
+            if self.source_index==len(self.source):
+                self.debug("out of range(limit exceeded due to right parenthesis)")
     
     def left_parenthesis(self,index): # ]
         if self.memory[self.header]!=0:
             self.source_index = self.matching_par[index]
+            if self.source_index==-1:
+                self.debug("out of range(limit below due to left parenthesis)")
+    
     
     def interperter(self):
         while self.source_index < len(self.source):
@@ -125,8 +142,10 @@ class Bf_interpreter:
         self.source_index += 1
     
 if __name__ == "__main__":
-    bf_ip = Bf_interpreter()
-    bf_ip.read_source()
+    bf_ip = Bf_interpreter("2 5 ")
+    bf_ip.set_source(bf_ip.read_source())
+    bf_ip.parsing()
+    
     bf_ip.debug("")
     bf_ip.interperter()
     bf_ip.debug("")
