@@ -11,21 +11,14 @@ class Brainfuck:
     piv is memory header.
     length is len(variable)
     """
-    variable: list = ["Res"]
-    for_var: list = []
-    piv: int = 0
-    length: int = 1
-    output: str = ""
-    in_else: int = 0
-    data_memory: int = 2
-    def free(self):
-        self.variable = ["Res"]
-        self.for_var = []
-        self.piv = 0
-        self.length = 1
-        self.output = ""
-        self.in_else = 0
-        self.data_memory = 2
+    def __init__(self):
+        self.variable: list = ["Res"]
+        self.for_var: list = []
+        self.piv: int = 0
+        self.length: int = 1
+        self.output: str = ""
+        self.in_else: int = 0
+        self.data_memory: int = 2
 
 
 

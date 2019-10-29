@@ -51,7 +51,6 @@ class MainWindow(QMainWindow):
 
 #UIを作成しているウィンドウ
 class UI(QWidget):
-    bf = ma.Brainfuck()
     def __init__(self, parent=None):
         super(UI, self).__init__(parent)
         self.initUI()
@@ -115,15 +114,15 @@ class UI(QWidget):
             self.txt_box.setText(text)
     def compile(self):
         txt = self.txt_box.toPlainText()
+        bf = ma.Brainfuck()
         #txt_list = txt.split("\n")
-        self.bf.free()
         """
         line = 1
         for v in txt_list:
             ma.judge(bf,v,line,None,True)
         """
-        ma.call_from_pyqt(txt,self.bf)
-        self.bf_box.setText(self.bf.output)
+        ma.call_from_pyqt(txt,bf)
+        self.bf_box.setText(bf.output)
 
     def run(self):
         bfi = bf_interpreter.Bf_interpreter(self.input_box.toPlainText())
