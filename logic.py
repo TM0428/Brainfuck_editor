@@ -2,7 +2,7 @@ import main
 import math
 
 class cal:
-    def __init__(self, bf: main.Brainfuck):
+    def __init__(self, bf):
         self.set = set([i for i in range(bf.length, bf.length+100)])
     def borrow(self, num): #num個の計算用スペースのindexを借りる
         res = []
@@ -569,11 +569,12 @@ def endif_output(bf):
     output += move_header(bf,length)
     if bf.in_else:
         if bf.in_else%2 == 1:
-            output += ">]<"
+            output += ">]"
         else:
-            output += ']'
+            output += ']>'
         for i in range(bf.in_else//2):
-            output += '>]<]'
+            output += ']'
+        output += '<'
     else:
         output += "]>[-]<"
     bf.piv = length
