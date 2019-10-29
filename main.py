@@ -211,6 +211,27 @@ def judge(bf, s_line, line, in_loop=False,first=False):
     elif s_line_list[0] == "test":
         bf.output += logic.test(bf,s_line_list[2],s_line_list[1],s_line_list[3])
 
+#PyQt用
+def call_from_pyqt(path):
+    brainfuck = Brainfuck()
+    with open(path) as f:
+        output = ""
+        line = 1
+        while True:
+            s_line = f.readline()
+            #EOF
+            if not s_line:
+                break
+            #s_line[0] is command
+            judge(brainfuck,s_line,line,False,True)
+            #Debug
+            #print(brainfuck.piv)
+
+            line += 1
+        print(brainfuck.output)
+
+
+
 
 
 args = sys.argv

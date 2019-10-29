@@ -601,6 +601,10 @@ def comparison(bf,com):
         output += "[>-<-]+>[<->[-]]<"
     elif com == "!=":
         output += "[>-<-]>[<+>[-]]<"
+    elif com == "and":
+        output += "[>>+<<[-]]+>>[<<->[<+>[-]]<[>+<-]>>-]<<[-]>[<+>-]<"
+    elif com == "or":
+        output += "[>>+<<[-]]>>[<[-]+>-]<[<+>[-]]<"
 
     return output
 
