@@ -3,6 +3,9 @@ import os
 import logic
 import regex
 
+args = sys.argv
+#args[1] is file name
+
 class Brainfuck:
     """
     piv is memory header.
@@ -15,6 +18,16 @@ class Brainfuck:
     output: str = ""
     in_else: int = 0
     data_memory: int = 2
+    def free(self):
+        self.variable = ["Res"]
+        self.for_var = []
+        self.piv = 0
+        self.length = 1
+        self.output = ""
+        self.in_else = 0
+        self.data_memory = 2
+
+
 
 def is_integer(n: int) -> bool:
     try:
@@ -36,8 +49,12 @@ def judge(bf: Brainfuck, s_line: str, line: int, in_loop: bool =False,first: boo
         for Text in s_line_list[1:]:
             #used variable
             if Text in bf.variable:
-                print('File "' + args[1] + '", line ' + str(line) +'\nError: Variable "' + Text + '" is used.', file=sys.stderr)
-                sys.exit(1)
+                if len(args) < 2:
+                    print('Inputted Code, line ' + str(line) +'\nError: Variable "' + Text + '" is used.', file=sys.stderr)
+                    sys.exit(1)
+                else:
+                    print('File "' + args[1] + '", line ' + str(line) +'\nError: Variable "' + Text + '" is used.', file=sys.stderr)
+                    sys.exit(1)
             bf.variable.append(Text)
         bf.length = len(bf.variable)
 
@@ -212,23 +229,14 @@ def judge(bf: Brainfuck, s_line: str, line: int, in_loop: bool =False,first: boo
         bf.output += logic.test(bf,s_line_list[2],s_line_list[1],s_line_list[3])
 
 #PyQt用
-def call_from_pyqt(path):
-    brainfuck = Brainfuck()
-    with open(path) as f:
-        output = ""
-        line = 1
-        while True:
-            s_line = f.readline()
-            #EOF
-            if not s_line:
-                break
-            #s_line[0] is command
-            judge(brainfuck,s_line,line,False,True)
-            #Debug
-            #print(brainfuck.piv)
-
-            line += 1
-        print(brainfuck.output)
+def call_from_pyqt(txt,bf):
+    txt_list = txt.split("\n")
+    for i in range(len(txt_list)):
+        if i == 0:
+            judge(bf,txt_list[i],i+1,None,True)
+        else:
+            judge(bf,txt_list[i],i+1,None,False)
+    bf.output = output_opti(bf.output)
 
 
 
@@ -266,8 +274,6 @@ def output_opti(bf_code: str) -> str:
     return output
 
 
-args = sys.argv
-#args[1] is file name
 if __name__ == "__main__":
     brainfuck = Brainfuck()
     #ERROR
@@ -284,9 +290,10 @@ if __name__ == "__main__":
             if not s_line:
                 break
             #s_line[0] is command
-            judge(brainfuck,s_line,line,None,True)
-            #Debug
-            #print(brainfuck.piv)
+            if line == 1:
+                judge(brainfuck,s_line,line,False,True)
+            else:
+                judge(brainfuck,s_line,line,False,False)
 
             line += 1
         #print(brainfuck.output)
