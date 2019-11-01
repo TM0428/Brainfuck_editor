@@ -226,10 +226,10 @@ def call_from_pyqt(txt,bf):
     txt_list = txt.split("\n")
     for i in range(len(txt_list)):
         if i == 0:
-            judge(bf,txt_list[i],i+1,None,False)
+            judge(bf,txt_list[i],i+1,None,True)
         else:
             judge(bf,txt_list[i],i+1,None,False)
-    #bf.output = output_opti(bf.output)
+    bf.output = output_opti(bf.output)
 
 
 
