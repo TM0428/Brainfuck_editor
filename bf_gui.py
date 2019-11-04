@@ -73,7 +73,7 @@ class UI(QWidget):
         self.bf_run_button = QPushButton("run↓", self)
         self.bf_run_button.clicked.connect(self.run)
 
-
+        #path,input_code
         layoutA = QGridLayout()
         layoutA.setSpacing(10)
         layoutA.addWidget(self.path_label,0,0)
@@ -83,17 +83,19 @@ class UI(QWidget):
         layoutA.addWidget(self.compile_button,2,2)
         layoutA.addWidget(self.bf_run_button,3,2)
 
-
+        #compile
         layoutB = QGridLayout()
         layoutB.addWidget(self.bf_label,0,0)
         layoutB.addWidget(self.bf_box,1,0)
 
+        #run
         layoutC = QGridLayout()
         layoutC.addWidget(self.input_label,0,0)
         layoutC.addWidget(self.input_box,1,0)
         layoutC.addWidget(self.output_label,2,0)
         layoutC.addWidget(self.output_box,3,0)
 
+        #layout(last)
         layout = QGridLayout()
         layout.addLayout(layoutA,0,0)
         layout.addLayout(layoutB,0,1)
@@ -102,12 +104,10 @@ class UI(QWidget):
         self.show()
 
     @pyqtSlot()
-    # epubからメタデータを取得
     def ShowDialog(self):
         fname = QFileDialog.getOpenFileName(self, 'Open file',text_dir,"テキストファイル(*.txt)")
         path = fname[0]
         if path != "":
-            #QMessageBox.question(self, "Message", "the file dir is " + path, QMessageBox.Ok, QMessageBox.Ok)
             with open(path) as f:
                 text = f.read()
             self.path_text.setText(path)
@@ -115,12 +115,6 @@ class UI(QWidget):
     def compile(self):
         txt = self.txt_box.toPlainText()
         bf = ma.Brainfuck()
-        #txt_list = txt.split("\n")
-        """
-        line = 1
-        for v in txt_list:
-            ma.judge(bf,v,line,None,True)
-        """
         ma.call_from_pyqt(txt,bf)
         self.bf_box.setText(bf.output)
 
@@ -131,6 +125,7 @@ class UI(QWidget):
         bfi.interperter()
         if bfi.err == 1:
             QMessageBox.warning(self,"Warning","Input is not defined.", QMessageBox.Ok)
+            return
         self.output_box.setText(bfi.outputs)
         
 def main():
