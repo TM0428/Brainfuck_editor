@@ -229,7 +229,7 @@ def call_from_pyqt(txt,bf):
             judge(bf,txt_list[i],i+1,None,True)
         else:
             judge(bf,txt_list[i],i+1,None,False)
-    bf.output = output_opti(bf.output)
+    #bf.output = output_opti(bf.output)
 
 
 
