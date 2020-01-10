@@ -99,7 +99,7 @@ class UI(QWidget):
             QMessageBox.question(self, "Message", "the file dir is " + path, QMessageBox.Ok, QMessageBox.Ok)
             with open(path) as f:
                 text = f.read()
-            self.sample2.setText(path)
+            self.path_text.setText(path)
             self.txt_box.setText(text)
 
 
