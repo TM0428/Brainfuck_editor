@@ -142,7 +142,7 @@ def set_data(bf,copy_to_mem,input1,after_cal=None):
         bf.piv = length
         return output
     else:
-        input_dec = input1 * 2
+        input_dec = bf.variable.index(input1) * 2
         output += move_header(bf,input_dec)
         bf.piv = input_dec
         output += "[>+<"

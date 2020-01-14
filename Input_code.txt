@@ -1,11 +1,13 @@
 Var a b
 Scan Int a
-Scan Int b
-if a > 9
-Print String -1\n
-elif b > 9
-Print String -1\n
+if a < 7
+Set b {Mul a a}
+Set b {Mul b a}
+Print Int b
+elif a == 7
+Print String 343\n
+elif a == 8
+Print String 512\n
 else
-Set a {Mul a b}
-Print Int a
+Print String 729\n
 endif
